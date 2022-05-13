@@ -1,11 +1,9 @@
 package utils;
 
-import interfaces.utils.iGZIPController;
-
 /**
  * @author filreh
  */
-public class GZIPController implements iGZIPController {
+public class GZIPController{
     /**
      * This method reads in a .csv file, compresses it and writes the contents to a .gz file.
      *
@@ -13,8 +11,7 @@ public class GZIPController implements iGZIPController {
      * @param to   location of .gz file
      * @return
      */
-    @Override
-    public boolean compress(String from, String to) {
+    public static boolean compress(String from, String to) {
         //TODO
         return false;
     }
@@ -26,8 +23,7 @@ public class GZIPController implements iGZIPController {
      * @param to   location of .csv file
      * @return
      */
-    @Override
-    public boolean decompress(String from, String to) {
+    public static boolean decompress(String from, String to) {
         //TODO
         return false;
     }

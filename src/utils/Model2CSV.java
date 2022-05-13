@@ -1,12 +1,12 @@
 package utils;
 
+import codecompletion.domain.filehandling.DocHandler;
 import codecompletion.domain.model.NGram;
-import interfaces.utils.iModel2CSV;
 
 /**
  * @author filreh
  */
-public class Model2CSV implements iModel2CSV {
+public class Model2CSV {
     /**
      * This method writes a model to a csv file. The location is according to the internal
      * storing mechanism that is based on the N parameter.
@@ -14,10 +14,8 @@ public class Model2CSV implements iModel2CSV {
      * @param model
      * @return
      */
-    @Override
-    public String model2csv(NGram model) {
+    public static void model2csv(NGram model, String location) {
         //TODO
-        return null;
     }
 
     /**
@@ -26,8 +24,7 @@ public class Model2CSV implements iModel2CSV {
      * @param location
      * @return
      */
-    @Override
-    public NGram csv2model(String location) {
+    public static NGram csv2model(String location) {
         //TODO
         return null;
     }

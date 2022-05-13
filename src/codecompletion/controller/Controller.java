@@ -1,6 +1,7 @@
 package codecompletion.controller;
 
 import codecompletion.Ludeme;
+import codecompletion.domain.filehandling.DocHandler;
 import codecompletion.domain.filehandling.ModelLibrary;
 import codecompletion.domain.model.Context;
 import codecompletion.domain.model.Grammar;
@@ -22,6 +23,7 @@ public class Controller implements iController {
     private ModelLibrary ml;
     private Grammar grammar;
     private NGram model;
+    private DocHandler docHandler;
 
     public Controller(int N) {
         this.N = N;
@@ -35,7 +37,8 @@ public class Controller implements iController {
      */
     @Override
     public void initModel() {
-        ml = new ModelLibrary();
+        docHandler = DocHandler.getInstance();
+        ml = new ModelLibrary(docHandler);
         model = ml.getModel(N);
         grammar = new Grammar();
     }

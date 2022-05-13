@@ -1,7 +1,10 @@
 package codecompletion.domain.filehandling;
 
+import codecompletion.domain.model.ModelCreator;
 import codecompletion.domain.model.NGram;
 import interfaces.codecompletion.domain.filehandling.iModelLibrary;
+import utils.GZIPController;
+import utils.Model2CSV;
 
 import java.util.List;
 
@@ -9,9 +12,16 @@ import java.util.List;
  * @author filreh
  */
 public class ModelLibrary implements iModelLibrary {
+
+    private final DocHandler docHandler;
+
+    public ModelLibrary(DocHandler docHandler) {
+        this.docHandler = docHandler;
+    }
+
     /**
      * This method returns a model with the specified N.
-     * If it didn't exist before it is created.
+     * If it didn't exist before it is created. ANd written to a file.
      * Adds it to the model locations. Also in the documents.txt
      *
      * @param N
@@ -19,7 +29,17 @@ public class ModelLibrary implements iModelLibrary {
      */
     @Override
     public NGram getModel(int N) {
-        return null;
+        NGram model;
+        //model does not exist
+        if(docHandler.getModelLocation(N).equals(DocHandler.MODEL_DOES_NOT_EXIST)) {
+            //create model
+            model = ModelCreator.createModel(N);
+
+        } else {
+            //model does exist
+            model = ModelFilehandler.readModel(N);
+        }
+        return model;
     }
 
     /**
