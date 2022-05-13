@@ -1,6 +1,7 @@
-package interfaces;
+package interfaces.codecompletion.controller;
 
-import codecompletion.domain.NGram;
+import codecompletion.Ludeme;
+import codecompletion.domain.model.NGram;
 
 import java.util.List;
 

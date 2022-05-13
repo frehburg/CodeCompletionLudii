@@ -1,4 +1,4 @@
-package codecompletion.domain;
+package codecompletion.domain.model;
 
 /**
  * @author filreh

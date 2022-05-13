@@ -1,6 +1,6 @@
-package interfaces;
+package interfaces.codecompletion.domain.filehandling;
 
-import codecompletion.domain.NGram;
+import codecompletion.domain.model.NGram;
 import java.util.List;
 
 /**

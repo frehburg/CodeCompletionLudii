@@ -1,6 +1,6 @@
-package interfaces;
+package interfaces.utils;
 
-import codecompletion.domain.NGram;
+import codecompletion.domain.model.NGram;
 
 /**
  * @author filreh

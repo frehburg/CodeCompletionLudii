@@ -1,4 +1,4 @@
-package interfaces;
+package interfaces.codecompletion.domain.filehandling;
 
 import java.util.List;
 

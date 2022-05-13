@@ -1,6 +1,6 @@
-package interfaces;
+package interfaces.codecompletion.domain.model;
 
-import codecompletion.domain.Context;
+import codecompletion.domain.model.Context;
 
 import java.util.List;
 

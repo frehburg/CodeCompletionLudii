@@ -1,7 +1,7 @@
-package interfaces;
+package interfaces.utils;
 
-import codecompletion.domain.Context;
-import codecompletion.domain.Instance;
+import codecompletion.domain.model.Context;
+import codecompletion.domain.model.Instance;
 
 import java.util.List;
 
