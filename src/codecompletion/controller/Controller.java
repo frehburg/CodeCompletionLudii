@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class Controller implements iController {
 
-    private final int N;
+    private int N;
     private ModelLibrary ml;
     private Grammar grammar;
     private NGram model;
@@ -91,7 +91,8 @@ public class Controller implements iController {
      */
     @Override
     public void changeModel(NGram model) {
-        //TODO
+        this.model = model;
+        this.N = model.getN();
     }
 
     /**
@@ -110,6 +111,6 @@ public class Controller implements iController {
     @Override
     public int getN() {
         //TODO
-        return 0;
+        return N;
     }
 }
