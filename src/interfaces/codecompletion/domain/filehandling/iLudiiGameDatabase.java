@@ -31,5 +31,5 @@ public interface iLudiiGameDatabase {
      * @param name
      * @return
      */
-    String getDescription(String name);
+    String getDescription(String name) throws Exception;
 }
