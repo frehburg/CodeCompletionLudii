@@ -93,8 +93,7 @@ public class ModelLibrary implements iModelLibrary {
      * @param N
      * @return
      */
-    @Override
-    public NGram addModel(int N) {
+    private NGram addModel(int N) {
         NGram model;
         //1. check if it exists
         if(docHandler.getModelLocation(N).equals(DocHandler.MODEL_DOES_NOT_EXIST)) {

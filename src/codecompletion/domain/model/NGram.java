@@ -19,6 +19,16 @@ public class NGram implements iNGram {
     }
 
     /**
+     * This constructor is to read in a model
+     * @param N
+     * @param dictionary
+     */
+    public NGram(int N, HashMap<String, List<Instance>> dictionary) {
+        this.N = N;
+        this.dictionary = dictionary;
+    }
+
+    /**
      * This method adds one instance to the model, be weary of multiplicities
      *
      * @param instance

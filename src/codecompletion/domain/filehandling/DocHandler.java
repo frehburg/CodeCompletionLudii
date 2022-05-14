@@ -1,6 +1,7 @@
 package codecompletion.domain.filehandling;
 
 import utils.FileUtils;
+import utils.StringUtils;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,6 +17,8 @@ public class DocHandler {
     public static final String MODEL_LOC = "location_model_";
     public static final String SEPARATOR = ":";
     public static final String MODEL_DOES_NOT_EXIST = "MODELDOESNOTEXIST";
+
+    private static final boolean DEBUG = false;
 
     private String grammarLocation;
     private String gamesLocation;
@@ -42,6 +45,7 @@ public class DocHandler {
         Scanner sc = FileUtils.readFile(DOC_LOCATION);
         while (sc.hasNext()) {
             String nextLine = sc.nextLine();
+            if(DEBUG)System.out.println(nextLine);
             parseDocumentsLine(nextLine);
         }
         sc.close();
@@ -57,15 +61,18 @@ public class DocHandler {
      */
     private void parseDocumentsLine(String line) {
         String[] split = line.split(SEPARATOR);
-        if(split[0].equals(GRAMMAR_LOC)) {
+        if(StringUtils.equals(split[0],GRAMMAR_LOC)) {
             grammarLocation = split[1];
+            if(DEBUG)System.out.println(grammarLocation);
         }
-        if(split[0].equals(GAMES_LOC)) {
+        if(StringUtils.equals(split[0],GAMES_LOC)) {
             gamesLocation = split[1];
+            if(DEBUG)System.out.println(gamesLocation);
         }
         if(split[0].startsWith(MODEL_LOC)) {
             int N = Integer.parseInt(split[0].charAt(MODEL_LOC.length())+"");
             modelLocations.put(N,split[1]);
+            if(DEBUG)System.out.println(modelLocations.get(N));
         }
     }
 
@@ -103,5 +110,16 @@ public class DocHandler {
 
     public String getModelLocation(int N) {
         return modelLocations.getOrDefault(N,MODEL_DOES_NOT_EXIST);
+    }
+
+    /**
+     * Write the documents file on closing
+     */
+    public void close() {
+        try {
+            writeDocumentsFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

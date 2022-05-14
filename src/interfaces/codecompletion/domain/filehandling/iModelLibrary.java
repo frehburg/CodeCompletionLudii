@@ -27,11 +27,4 @@ public interface iModelLibrary {
      * @return
      */
     int getAmountModels();
-
-    /**
-     * If the model is not already included in the list of models, then it is created and added to the list.
-     * @param N
-     * @return
-     */
-    NGram addModel(int N);
 }

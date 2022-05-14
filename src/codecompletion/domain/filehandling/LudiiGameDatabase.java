@@ -31,6 +31,7 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
 
     private LudiiGameDatabase() {
         this.docHandler = DocHandler.getInstance();
+        init();
     }
 
     private void init() {
@@ -40,6 +41,7 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
     }
 
     private void fetchGameLocations() {
+        System.out.println(docHandler.getGamesLocation());
         File folder = new File(docHandler.getGamesLocation());
         ArrayList<File> files = FileUtils.listFilesForFolder(folder);
         locations = new ArrayList<>();

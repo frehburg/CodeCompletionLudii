@@ -101,6 +101,8 @@ public class Controller implements iController {
      */
     @Override
     public void close() {
+        DocHandler docHandler = DocHandler.getInstance();
+        docHandler.close();
         //TODO
     }
 
