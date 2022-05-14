@@ -3,10 +3,12 @@ package codecompletion.domain.filehandling;
 import codecompletion.domain.model.ModelCreator;
 import codecompletion.domain.model.NGram;
 import interfaces.codecompletion.domain.filehandling.iModelLibrary;
-import utils.GZIPController;
-import utils.Model2CSV;
+import utils.StringUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author filreh
@@ -15,8 +17,13 @@ public class ModelLibrary implements iModelLibrary {
 
     private final DocHandler docHandler;
 
-    public ModelLibrary(DocHandler docHandler) {
-        this.docHandler = docHandler;
+    private List<String> modelLocations;
+    private Map<Integer,NGram> allModels;
+
+    public ModelLibrary() {
+        this.docHandler = DocHandler.getInstance();
+        allModels = new HashMap<>();
+        this.modelLocations = allModelLocations();
     }
 
     /**
@@ -29,27 +36,30 @@ public class ModelLibrary implements iModelLibrary {
      */
     @Override
     public NGram getModel(int N) {
-        NGram model;
-        //model does not exist
-        if(docHandler.getModelLocation(N).equals(DocHandler.MODEL_DOES_NOT_EXIST)) {
-            //create model
-            model = ModelCreator.createModel(N);
-
-        } else {
-            //model does exist
-            model = ModelFilehandler.readModel(N);
+        //1. check if it is in the already loaded in models
+        NGram model = allModels.getOrDefault(N,null);
+        if(model == null) {
+            addModel(N);
         }
         return model;
     }
 
     /**
-     * Returns all model locations
+     * Returns all model locations, is updated everytime it is called
      *
      * @return
      */
     @Override
-    public List<String> allLocations() {
-        return null;
+    public List<String> allModelLocations() {
+        modelLocations = new ArrayList<>();
+        for(int N = 2; N <= 20; N++) {
+            String location = docHandler.getModelLocation(N);
+            //if the model exists
+            if(!StringUtils.equals(location,docHandler.MODEL_DOES_NOT_EXIST)) {
+                modelLocations.add(location);
+            }
+        }
+        return modelLocations;
     }
 
     /**
@@ -59,17 +69,31 @@ public class ModelLibrary implements iModelLibrary {
      */
     @Override
     public int getAmountModels() {
-        return 0;
+        //update the list before returning
+        allModelLocations();
+        return modelLocations.size();
     }
 
     /**
      * If the model is not already included in the list of models, then it is created and added to the list.
-     *
+     * If this method is called, then the model is not in allModels
      * @param N
      * @return
      */
     @Override
     public NGram addModel(int N) {
-        return null;
+        NGram model;
+        //1. check if it exists
+        if(docHandler.getModelLocation(N).equals(DocHandler.MODEL_DOES_NOT_EXIST)) {
+            //1.a does not exist: create a new one
+            model = ModelCreator.createModel(N);
+
+        } else {
+            //1.b model does exist: read it in from file
+            model = ModelFilehandler.readModel(N);
+        }
+        //either way add it to the loaded in models
+        allModels.put(N,model);
+        return model;
     }
 }

@@ -38,7 +38,7 @@ public class Controller implements iController {
     @Override
     public void initModel() {
         docHandler = DocHandler.getInstance();
-        ml = new ModelLibrary(docHandler);
+        ml = new ModelLibrary();
         model = ml.getModel(N);
         grammar = new Grammar();
     }

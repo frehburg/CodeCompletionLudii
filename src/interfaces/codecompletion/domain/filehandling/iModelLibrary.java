@@ -20,7 +20,7 @@ public interface iModelLibrary {
      * Returns all model locations
      * @return
      */
-    List<String> allLocations();
+    List<String> allModelLocations();
 
     /**
      * Returns the amount of models stored currently
