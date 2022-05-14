@@ -5,6 +5,8 @@ import utils.FileUtils;
 import utils.StringUtils;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -54,7 +56,27 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
         }
     }
 
+    /**
+     * This method reads in a file that contains all game names.
+     */
     private void fetchGameNames() {
+        String location = "res/lud/gamenames.txt"; //TODO add to dochandler and documents.txt
+
+        Scanner sc = FileUtils.readFile(location);
+        int id = 0;
+        while (sc.hasNext()) {
+            String curGameName = sc.nextLine();
+            names.put(curGameName,id++);
+        }
+        sc.close();
+    }
+
+    /**
+     * This method analyses each game description one by one and writes the name of each game to a file.
+     */
+    private void fetchGameNamesFromDescriptions() {
+        String location = "res/lud/gamenames.txt";
+        FileWriter fw = FileUtils.writeFile(location);
         for(int i = 0; i < getAmountGames(); i++) {
             String gameDescription = getDescription(i);
             String gameLudeme = "(game";
@@ -74,7 +96,11 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
                     gameName += cur;
                 }
             }
-            System.out.println(gameName);
+            try {
+                fw.write(gameName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             names.put(gameName, i);
         }
     }
@@ -136,6 +162,7 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
     @Override
     public String getDescription(String name) {
         int id = names.get(name);
+        System.out.println(locations.get(id));
         return getDescription(id);
     }
 }

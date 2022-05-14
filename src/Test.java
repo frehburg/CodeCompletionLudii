@@ -14,12 +14,10 @@ public class Test {
     private static final String COMMA = ",";
 
     public static void main(String[] args) {
-        int removed = 0;
-        Random r = new Random();
-
         LudiiGameDatabase db = LudiiGameDatabase.getInstance();
-        String gameDescription = db.getDescription("Sumi Naga Game (Hunt)");
-        Preprocessing.preprocess(gameDescription);
+        for(int i = 0; i < db.getAmountGames(); i++) {
+            Preprocessing.preprocess(db.getDescription(i));
+        }
     }
 
     public static void testModelCreation() {
