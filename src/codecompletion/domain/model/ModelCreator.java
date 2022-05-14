@@ -40,11 +40,8 @@ public class ModelCreator {
 
             //add all instances of length in {2,...,N}
             for(int i = 2; i <= N; i++) {
-                System.out.println(cleanGameDescription);
                 List<String> substrings = NGramUtils.allSubstrings(cleanGameDescription, i);
-                System.out.println(substrings);
                 for(String substring : substrings) {
-                    System.out.println(substring);
                     Instance curInstance = NGramUtils.createInstance(substring);
                     if(curInstance != null) {
                         model.addInstanceToModel(curInstance);

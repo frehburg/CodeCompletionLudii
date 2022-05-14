@@ -1,3 +1,4 @@
+import codecompletion.domain.filehandling.DocHandler;
 import codecompletion.domain.filehandling.LudiiGameDatabase;
 import codecompletion.domain.filehandling.ModelLibrary;
 import codecompletion.domain.model.Context;
@@ -17,6 +18,7 @@ public class Test {
 
     public static void main(String[] args) {
         testModelCreation();
+        DocHandler.getInstance().close();
     }
 
     public static void testModelCreation() {

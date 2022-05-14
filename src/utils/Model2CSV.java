@@ -80,8 +80,12 @@ public class Model2CSV {
 
         //since the csv is compressed, we keep the last string for the next instances
         String lastKey = EMPTY_STRING;
-
+        boolean firstLine = true;
         for(String line : lines) {
+            if(firstLine) {
+                firstLine = false;
+                continue;
+            }
             if(DEBUG)System.out.println("--------------------------");
             if(DEBUG)System.out.println(line);
             String[] split = line.split(COMMA);

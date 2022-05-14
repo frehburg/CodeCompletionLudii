@@ -22,7 +22,7 @@ public class ModelFilehandler {
         //removes file extension
         location = StringUtils.removeSuffix(location,".gz");
         //decompress
-        GZIPController.decompress(location,location+".csv");
+        GZIPController.decompress(location+".gz",location+".csv");
         //model2csv
         NGram model = Model2CSV.csv2model(location+".csv");
         return model;

@@ -83,15 +83,15 @@ public class DocHandler {
     public void writeDocumentsFile() throws IOException {
         FileWriter fw = FileUtils.writeFile(DOC_LOCATION);
         if(grammarLocation != null) {
-            fw.write(GRAMMAR_LOC+SEPARATOR+grammarLocation);
+            fw.write(GRAMMAR_LOC+SEPARATOR+grammarLocation+"\n");
         }
         if(gamesLocation != null) {
-            fw.write(GAMES_LOC+SEPARATOR+gamesLocation);
+            fw.write(GAMES_LOC+SEPARATOR+gamesLocation+"\n");
         }
         for(Map.Entry<Integer, String> entry : modelLocations.entrySet()) {
             int N = entry.getKey();
             String modelLocation = entry.getValue();
-            fw.write(MODEL_LOC+N+SEPARATOR+modelLocation);
+            fw.write(MODEL_LOC+N+SEPARATOR+modelLocation+"\n");
         }
         fw.close();
     }
