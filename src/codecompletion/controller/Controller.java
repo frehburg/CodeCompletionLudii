@@ -3,10 +3,7 @@ package codecompletion.controller;
 import codecompletion.Ludeme;
 import codecompletion.domain.filehandling.DocHandler;
 import codecompletion.domain.filehandling.ModelLibrary;
-import codecompletion.domain.model.Context;
-import codecompletion.domain.model.Grammar;
-import codecompletion.domain.model.Instance;
-import codecompletion.domain.model.NGram;
+import codecompletion.domain.model.*;
 import interfaces.codecompletion.controller.iController;
 import utils.BucketSort;
 import utils.Instance2Ludeme;
@@ -54,8 +51,9 @@ public class Controller implements iController {
      */
     @Override
     public List<Ludeme> getPicklist(String contextString) {
-        // 1.
-        Context context = NGramUtils.createContext(contextString);
+        // 1. acquire context and preprocess it
+        String cleanContextString = Preprocessing.preprocess(contextString);
+        Context context = NGramUtils.createContext(cleanContextString);
         // 2. context sensitivity
         List<Instance> match = model.getMatch(context.getKey());
         // 3. type-meatching
