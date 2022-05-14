@@ -2,6 +2,7 @@ package codecompletion.domain.filehandling;
 
 import interfaces.codecompletion.domain.filehandling.iLudiiGameDatabase;
 import utils.FileUtils;
+import utils.StringUtils;
 
 import java.io.File;
 import java.util.*;
@@ -15,7 +16,8 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
     private final DocHandler docHandler;
 
     private ArrayList<String> locations;
-    private Map<Integer, String> names, descriptions;
+    private Map<Integer, String> descriptions;
+    private Map<String, Integer> names;
     //Singleton
     private static LudiiGameDatabase db;
 
@@ -38,10 +40,10 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
         fetchGameLocations();
         names = new HashMap<>();
         descriptions = new HashMap<>();
+        fetchGameNames();
     }
 
     private void fetchGameLocations() {
-        System.out.println(docHandler.getGamesLocation());
         File folder = new File(docHandler.getGamesLocation());
         ArrayList<File> files = FileUtils.listFilesForFolder(folder);
         locations = new ArrayList<>();
@@ -49,6 +51,31 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
             String location = f.getAbsolutePath();
             locations.add(location);
             if(DEBUG)System.out.println(location);
+        }
+    }
+
+    private void fetchGameNames() {
+        for(int i = 0; i < getAmountGames(); i++) {
+            String gameDescription = getDescription(i);
+            String gameLudeme = "(game";
+            int gameLocation = gameDescription.lastIndexOf(gameLudeme);
+            char[] gameDescrChars = gameDescription.toCharArray();
+            String gameName = "";
+            boolean start = false;
+            // iterate over game description to find the name of the game
+            loop:for(int j = 0; j < gameDescription.length(); j++) {
+                char cur = gameDescrChars[j];
+                if(cur == '"' && !start) {
+                    start = true;
+                }  else if(cur == '"' && start) {
+                    // found end of string
+                    break loop;
+                } else if(start) {
+                    gameName += cur;
+                }
+            }
+            System.out.println(gameName);
+            names.put(gameName, i);
         }
     }
 
@@ -84,13 +111,14 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
         String description = descriptions.getOrDefault(id,"null");
 
         // else, reads it in
-        if(description.equals("null")) {
+        if(StringUtils.equals(description,"null")) {
+            description = "";
             String location = locations.get(id);
             //reads line by line
-            Scanner sc = new Scanner(location);
+            Scanner sc = FileUtils.readFile(location);
             while (sc.hasNext()) {
                 String nextLine = sc.nextLine();
-                description += nextLine;
+                description += "\n"+nextLine;
             }
             sc.close();
 
@@ -106,8 +134,8 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
      * @return
      */
     @Override
-    public String getDescription(String name) throws Exception {
-        // TODO
-        throw new Exception("This method has not been implemented yet");
+    public String getDescription(String name) {
+        int id = names.get(name);
+        return getDescription(id);
     }
 }
