@@ -19,6 +19,6 @@ public class BucketSort {
      */
     public static List<Instance> sort(List<Instance> unorderedPicklist) {
         //TODO
-        return null;
+        return unorderedPicklist;
     }
 }

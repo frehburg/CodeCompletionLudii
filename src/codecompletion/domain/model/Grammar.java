@@ -42,7 +42,7 @@ public class Grammar implements iGrammar {
     @Override
     public List<Instance> filterOutInvalid(Context context, List<Instance> match) {
         //TODO
-        return null;
+        return match;
     }
 
     @Override

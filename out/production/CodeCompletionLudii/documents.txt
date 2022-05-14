@@ -1,3 +1,2 @@
 grammar_location:res/grammar/grammar.txt
 games_location:res/lud
-location_model_2:res/models/ngram_model_2.gz

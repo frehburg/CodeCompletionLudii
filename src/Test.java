@@ -1,29 +1,23 @@
+import codecompletion.controller.Controller;
 import codecompletion.domain.filehandling.DocHandler;
-import codecompletion.domain.filehandling.LudiiGameDatabase;
 import codecompletion.domain.filehandling.ModelLibrary;
-import codecompletion.domain.model.Context;
 import codecompletion.domain.model.NGram;
-import codecompletion.domain.model.Preprocessing;
-import utils.Model2CSV;
-import utils.NGramUtils;
-import utils.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class Test {
     private static final String COMMA = ",";
 
     public static void main(String[] args) {
-        testModelCreation();
-        DocHandler.getInstance().close();
+        Controller controller = new Controller(2);
+        System.out.println(controller.getPicklist("(equipment { (board"));
+        controller.close();
     }
 
     public static void testModelCreation() {
         ModelLibrary lib = ModelLibrary.getInstance();
-        lib.getModel(2);
+        NGram model = lib.getModel(5);
+        DocHandler.getInstance().close();
     }
 
     public static void print(Object o) {

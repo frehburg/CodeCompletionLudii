@@ -19,7 +19,9 @@ public class Instance2Ludeme {
     public static List<Ludeme> foreachInstance2ludeme(List<Instance> instances) {
         List<Ludeme> ludemes = new ArrayList<>();
         for(Instance instance : instances) {
-            ludemes.add(instance2ludeme(instance));
+            if(instance != null) {
+                ludemes.add(instance2ludeme(instance));
+            }
         }
         return ludemes;
     }

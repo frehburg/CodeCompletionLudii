@@ -32,8 +32,7 @@ public class Controller implements iController {
      * - request a model with the specified N from the ModelLibrary
      * - load in the grammar
      */
-    @Override
-    public void initModel() {
+    private void initModel() {
         docHandler = DocHandler.getInstance();
         lib = ModelLibrary.getInstance();
         model = lib.getModel(N);
@@ -103,7 +102,7 @@ public class Controller implements iController {
     public void close() {
         DocHandler docHandler = DocHandler.getInstance();
         docHandler.close();
-        //TODO
+        //TODO: find .csv feel and delete if necessary
     }
 
     /**

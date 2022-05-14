@@ -9,6 +9,8 @@ public class Preprocessing {
     public static final String INTEGER_WILDCARD = "INTEGER";
     public static final String FLOAT_WILDCARD = "FLOAT";
     public static final String BOOLEAN_WILDCARD = "BOOLEAN";
+    public static final String STRING_WILDCARD = "STRING";
+    public static final String OPTION_WILDCARD = "STRING";
 
     /**
      * This method applies all the necessary steps of preprocessing.

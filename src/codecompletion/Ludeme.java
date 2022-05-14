@@ -10,4 +10,8 @@ public class Ludeme {
     public String getKeyword() {
         return keyword;
     }
+
+    public String toString() {
+        return keyword;
+    }
 }

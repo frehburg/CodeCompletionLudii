@@ -54,6 +54,8 @@ public class NGram implements iNGram {
         if(!foundEqual) {
             recs.add(instance);
         }
+
+        dictionary.put(instance.getKey(),recs);
     }
 
     /**

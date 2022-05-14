@@ -2,6 +2,7 @@ package codecompletion.domain.model;
 
 import interfaces.codecompletion.domain.model.iInstance;
 import utils.ListUtils;
+import utils.StringUtils;
 
 import java.util.List;
 
@@ -102,17 +103,13 @@ public class Instance implements iInstance {
             List<String> iWords = i.getWords();
 
             if(iWords.size() == words.size()) {
-                boolean same = true;
                 for(int j = 0; j < words.size(); j++) {
-                    if(iWords.get(j) != words.get(j)) {
-                        same = false;
-                        break;
+                    if(!StringUtils.equals(iWords.get(j),words.get(j))) {
+                        return false;
                     }
                 }
 
-                if(same) {
-                    return true;
-                }
+                return true;
             }
         }
         return false;

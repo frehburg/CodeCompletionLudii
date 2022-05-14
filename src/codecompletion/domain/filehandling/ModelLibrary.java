@@ -52,7 +52,7 @@ public class ModelLibrary implements iModelLibrary {
         //1. check if it is in the already loaded in models
         NGram model = allModels.getOrDefault(N,null);
         if(model == null) {
-            addModel(N);
+            model = addModel(N);
         }
         return model;
     }

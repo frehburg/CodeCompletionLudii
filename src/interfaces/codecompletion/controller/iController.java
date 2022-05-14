@@ -9,12 +9,6 @@ import java.util.List;
  * @author filreh
  */
 public interface iController {
-    /**
-     * This method should
-     * - request a model with the specified N from the ModelLibrary
-     * - load in the grammar
-     */
-    void initModel();
 
     /**
      * 1. Convert the context string into a Context object
