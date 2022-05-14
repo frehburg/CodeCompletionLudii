@@ -15,7 +15,7 @@ public class NGramUtils {
      * @param N
      * @return
      */
-    public static List<String> allSubstrings(int N) {
+    public static List<String> allSubstrings(String gameDescription, int N) {
         //TODO
         return null;
     }

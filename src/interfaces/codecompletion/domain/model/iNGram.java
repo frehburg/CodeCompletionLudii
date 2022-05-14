@@ -8,6 +8,13 @@ import java.util.List;
  * @author filreh
  */
 public interface iNGram {
+
+    /**
+     * This method adds one instance to the model, be weary of multiplicities
+     * @param instance
+     */
+    void addInstanceToModel(Instance instance);
+
     /**
      * This method returns a list of all instances with the same key as the provided one.
      * @param key
