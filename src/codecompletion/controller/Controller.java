@@ -40,7 +40,7 @@ public class Controller implements iController {
         docHandler = DocHandler.getInstance();
         lib = ModelLibrary.getInstance();
         model = lib.getModel(N);
-        grammar = new Grammar();
+        grammar = Grammar.getInstance();
     }
 
     /**

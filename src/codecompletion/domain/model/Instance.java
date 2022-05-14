@@ -1,6 +1,7 @@
 package codecompletion.domain.model;
 
 import interfaces.codecompletion.domain.model.iInstance;
+import utils.ListUtils;
 
 import java.util.List;
 
@@ -8,48 +9,79 @@ import java.util.List;
  * @author filreh
  */
 public class Instance implements iInstance {
+
+    private final List<String> words;
+    private final Context context;
+    private final int length;
+    private final String prediction;
+    private final String key;
+    private int multiplicity;
+
+    public Instance(List<String> words, int multiplicity) {
+        this.multiplicity = multiplicity;
+        this.words = words;
+        this.length = words.size();
+        //the last word is left out of the context because it is the prediction
+        this.context = new Context(words.subList(0,length - 1));
+        this.prediction = words.get(length - 1);
+        this.key = words.get(length - 2);
+    }
+
+    public Instance(List<String> words) {
+        this.multiplicity = 1;
+        this.words = words;
+        this.length = words.size();
+        //the last word is left out of the context because it is the prediction
+        this.context = new Context(words.subList(0,length - 1));
+        this.prediction = words.get(length - 1);
+        this.key = words.get(length - 2);
+    }
+
     /**
      * This method increases the multiplicity of the instance by one.
      */
     @Override
     public void increaseMultiplicity() {
-        //TODO
+        this.multiplicity++;
     }
 
     /**
      * This method simply counts up the number of words this instance has in common with the context,
      * starting at the back.
      *
-     * @param context
+     * @param c
      * @return
      */
     @Override
-    public int matchingWords(Context context) {
-        //TODO
-        return 0;
+    public int matchingWords(Context c) {
+        List<String> foreignContextWords = c.getWords();
+        List<String> thisContextWords = this.context.getWords();
+        int matchingWords = ListUtils.stringsInCommonBack(foreignContextWords,thisContextWords);
+        return matchingWords;
     }
 
     @Override
     public String getPrediction() {
-        //TODO
-        return null;
+        return this.prediction;
     }
 
     @Override
     public String getKey() {
-        //TODO
-        return null;
+        return this.key;
     }
 
     @Override
     public List<String> getWords() {
-        //TODO
-        return null;
+        return this.words;
+    }
+
+    @Override
+    public Context getContext() {
+        return this.context;
     }
 
     @Override
     public int getMultiplicity() {
-        //TODO
-        return 0;
+        return this.multiplicity;
     }
 }

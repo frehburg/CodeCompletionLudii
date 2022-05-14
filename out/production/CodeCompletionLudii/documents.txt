@@ -1,0 +1,2 @@
+grammar_location:res/grammar/grammar.txt
+game_location:res/lud

@@ -25,10 +25,10 @@ public interface iInstance {
     /**
      * This method simply counts up the number of words this instance has in common with the context,
      * starting at the back.
-     * @param context
+     * @param c
      * @return
      */
-    int matchingWords(Context context);
+    int matchingWords(Context c);
 
     /**
      * This method produces a string that represents the instance with all its fields.
@@ -41,6 +41,8 @@ public interface iInstance {
     String getKey();
 
     List<String> getWords();
+
+    Context getContext();
 
     int getMultiplicity();
 }
