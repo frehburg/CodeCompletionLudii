@@ -19,7 +19,7 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
     //Singleton
     private static LudiiGameDatabase db;
 
-    public LudiiGameDatabase getInstance() {
+    public static LudiiGameDatabase getInstance() {
         // create object if it's not already created
         if(db == null) {
             db = new LudiiGameDatabase();
