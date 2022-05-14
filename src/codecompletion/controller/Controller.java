@@ -20,7 +20,7 @@ import java.util.List;
 public class Controller implements iController {
 
     private int N;
-    private ModelLibrary ml;
+    private ModelLibrary lib;
     private Grammar grammar;
     private NGram model;
     private DocHandler docHandler;
@@ -38,8 +38,8 @@ public class Controller implements iController {
     @Override
     public void initModel() {
         docHandler = DocHandler.getInstance();
-        ml = new ModelLibrary();
-        model = ml.getModel(N);
+        lib = ModelLibrary.getInstance();
+        model = lib.getModel(N);
         grammar = new Grammar();
     }
 
@@ -113,7 +113,6 @@ public class Controller implements iController {
      */
     @Override
     public int getN() {
-        //TODO
         return N;
     }
 }

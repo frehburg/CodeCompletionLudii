@@ -16,9 +16,21 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
 
     private ArrayList<String> locations;
     private Map<Integer, String> names, descriptions;
+    //Singleton
+    private static LudiiGameDatabase db;
 
-    public LudiiGameDatabase(DocHandler docHandler) {
-        this.docHandler = docHandler;
+    public LudiiGameDatabase getInstance() {
+        // create object if it's not already created
+        if(db == null) {
+            db = new LudiiGameDatabase();
+        }
+
+        // returns the singleton object
+        return db;
+    }
+
+    private LudiiGameDatabase() {
+        this.docHandler = DocHandler.getInstance();
     }
 
     private void init() {

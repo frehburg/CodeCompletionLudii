@@ -20,7 +20,20 @@ public class ModelLibrary implements iModelLibrary {
     private List<String> modelLocations;
     private Map<Integer,NGram> allModels;
 
-    public ModelLibrary() {
+    //Singleton
+    private static ModelLibrary lib;
+
+    public static ModelLibrary getInstance() {
+        // create object if it's not already created
+        if(lib == null) {
+            lib = new ModelLibrary();
+        }
+
+        // returns the singleton object
+        return lib;
+    }
+
+    private ModelLibrary() {
         this.docHandler = DocHandler.getInstance();
         allModels = new HashMap<>();
         this.modelLocations = allModelLocations();
