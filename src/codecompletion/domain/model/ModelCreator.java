@@ -1,6 +1,5 @@
 package codecompletion.domain.model;
 
-import codecompletion.domain.filehandling.DocHandler;
 import codecompletion.domain.filehandling.LudiiGameDatabase;
 import codecompletion.domain.filehandling.ModelFilehandler;
 import utils.NGramUtils;
