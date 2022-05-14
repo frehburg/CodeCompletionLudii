@@ -1,8 +1,10 @@
 import codecompletion.domain.filehandling.LudiiGameDatabase;
 import codecompletion.domain.filehandling.ModelLibrary;
 import codecompletion.domain.model.Context;
+import codecompletion.domain.model.NGram;
 import codecompletion.domain.model.Preprocessing;
 import utils.Model2CSV;
+import utils.NGramUtils;
 import utils.StringUtils;
 
 import java.util.ArrayList;
@@ -15,8 +17,11 @@ public class Test {
 
     public static void main(String[] args) {
         LudiiGameDatabase db = LudiiGameDatabase.getInstance();
-        for(int i = 0; i < db.getAmountGames(); i++) {
-            Preprocessing.preprocess(db.getDescription(i));
+        String gameDescription = db.getDescription("Tic-Tac-Toe");
+        gameDescription = Preprocessing.preprocess(gameDescription);
+        List<String> substrings = NGramUtils.allSubstrings("one two three four five six seven",5);
+        for(String s : substrings) {
+            System.out.println(NGramUtils.createContext(s));
         }
     }
 

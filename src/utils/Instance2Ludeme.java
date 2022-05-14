@@ -13,8 +13,7 @@ public class Instance2Ludeme {
      * @return
      */
     public static Ludeme instance2ludeme(Instance instance) {
-        //TODO
-        return new Ludeme();
+        return new Ludeme(instance.getPrediction());
     }
 
     public static List<Ludeme> foreachInstance2ludeme(List<Instance> instances) {

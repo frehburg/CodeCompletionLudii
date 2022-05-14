@@ -84,4 +84,14 @@ public class Instance implements iInstance {
     public int getMultiplicity() {
         return this.multiplicity;
     }
+
+    @Override
+    public String toString() {
+        String output = "{Words: ";
+        for(String word : words) {
+            output += word + " ";
+        }
+        output += "Prediction: " + prediction + " Key: "+key+" Multiplicity: " + multiplicity+"}";
+        return  output;
+    }
 }

@@ -32,4 +32,14 @@ public class Context implements iContext {
     public List<String> getWords() {
         return words;
     }
+
+    @Override
+    public String toString() {
+        String output = "{Words: ";
+        for(String word : words) {
+            output += word + " ";
+        }
+        output += "Key: "+key+"}";
+        return  output;
+    }
 }

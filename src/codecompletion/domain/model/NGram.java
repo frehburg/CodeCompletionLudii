@@ -35,7 +35,9 @@ public class NGram implements iNGram {
      */
     @Override
     public void addInstanceToModel(Instance instance) {
-
+        // TODO: Duplicate every NUMBER into
+        String integerWildcard = Preprocessing.INTEGER_WILDCARD;
+        String floatWildcard = Preprocessing.FLOAT_WILDCARD;
     }
 
     /**

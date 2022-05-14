@@ -1,17 +1,14 @@
 package codecompletion.domain.model;
 
-import utils.Pair;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author filreh
  */
 public class Preprocessing {
-    private static final boolean DEBUG = true;
-    private static final String NUMBER_WILDCARD = "NUMBER";
-    private static final String BOOLEAN_WILDCARD = "BOOLEAN";
+    private static final boolean DEBUG = false;
+    public static final String NUMBER_WILDCARD = "NUMBER";
+    public static final String INTEGER_WILDCARD = "INTEGER";
+    public static final String FLOAT_WILDCARD = "FLOAT";
+    public static final String BOOLEAN_WILDCARD = "BOOLEAN";
 
     /**
      * This method applies all the necessary steps of preprocessing.
@@ -19,13 +16,13 @@ public class Preprocessing {
      * @return
      */
     public static String preprocess(String gameDescription) {
-//        if(DEBUG)System.out.println("Raw:"+gameDescription);
+        if(DEBUG)System.out.println("Raw:"+gameDescription);
         gameDescription = removeMetadata(gameDescription);
-//        if(DEBUG)System.out.println("Removed Metadata:"+gameDescription);
+        if(DEBUG)System.out.println("Removed Metadata:"+gameDescription);
         gameDescription = removeComments(gameDescription);
-//        if(DEBUG)System.out.println("Removed Comments:"+gameDescription);
+        if(DEBUG)System.out.println("Removed Comments:"+gameDescription);
         gameDescription = removeWhitespaces(gameDescription);
-//        if(DEBUG)System.out.println("Removed Withespaces:"+gameDescription);
+        if(DEBUG)System.out.println("Removed Withespaces:"+gameDescription);
         gameDescription = genericValues(gameDescription);
         if(DEBUG)System.out.println("Replaced specific values with generic placeholders:"+gameDescription);
         return gameDescription;

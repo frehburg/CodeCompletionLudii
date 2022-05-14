@@ -3,6 +3,8 @@ package utils;
 import codecompletion.domain.model.Context;
 import codecompletion.domain.model.Instance;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,8 +18,23 @@ public class NGramUtils {
      * @return
      */
     public static List<String> allSubstrings(String gameDescription, int N) {
-        //TODO
-        return null;
+        String[] words = gameDescription.split(" ");
+        List<String> substringsLengthN = new ArrayList<>();
+        for(int i = 0; i <= words.length; i++) {
+            int substringEnd = i + N;
+
+            if(substringEnd <= words.length) {
+                String curSubstring = "";
+                for(int j = i; j < substringEnd; j++) {
+                    curSubstring += words[j];
+                    if(j != substringEnd - 1) {
+                        curSubstring += " ";
+                    }
+                }
+                substringsLengthN.add(curSubstring);
+            }
+        }
+        return substringsLengthN;
     }
 
     /**
@@ -27,8 +44,9 @@ public class NGramUtils {
      * @return
      */
     public static Instance createInstance(String substring) {
-        //TODO
-        return null;
+        List<String> words = Arrays.asList(substring.split(" "));
+        Instance instance = new Instance(words);
+        return instance;
     }
 
     /**
@@ -38,7 +56,8 @@ public class NGramUtils {
      * @return
      */
     public static Context createContext(String context) {
-        //TODO
-        return null;
+        List<String> words = Arrays.asList(context.split(" "));
+        Context contextObject = new Context(words);
+        return contextObject;
     }
 }
