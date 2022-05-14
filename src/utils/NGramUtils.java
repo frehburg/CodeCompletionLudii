@@ -45,6 +45,9 @@ public class NGramUtils {
      */
     public static Instance createInstance(String substring) {
         List<String> words = Arrays.asList(substring.split(" "));
+        if(words.size() < 2) {
+            return null;
+        }
         Instance instance = new Instance(words);
         return instance;
     }

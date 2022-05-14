@@ -16,13 +16,7 @@ public class Test {
     private static final String COMMA = ",";
 
     public static void main(String[] args) {
-        LudiiGameDatabase db = LudiiGameDatabase.getInstance();
-        String gameDescription = db.getDescription("Tic-Tac-Toe");
-        gameDescription = Preprocessing.preprocess(gameDescription);
-        List<String> substrings = NGramUtils.allSubstrings("one two three four five six seven",5);
-        for(String s : substrings) {
-            System.out.println(NGramUtils.createContext(s));
-        }
+        testModelCreation();
     }
 
     public static void testModelCreation() {

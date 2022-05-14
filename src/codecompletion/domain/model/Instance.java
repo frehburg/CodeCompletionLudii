@@ -94,4 +94,27 @@ public class Instance implements iInstance {
         output += "Prediction: " + prediction + " Key: "+key+" Multiplicity: " + multiplicity+"}";
         return  output;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof Instance) {
+            Instance i = (Instance) o;
+            List<String> iWords = i.getWords();
+
+            if(iWords.size() == words.size()) {
+                boolean same = true;
+                for(int j = 0; j < words.size(); j++) {
+                    if(iWords.get(j) != words.get(j)) {
+                        same = false;
+                        break;
+                    }
+                }
+
+                if(same) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
