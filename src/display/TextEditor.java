@@ -147,7 +147,7 @@ public class TextEditor {
                 //TODO make this method show the picklist
 
             } else if (s.equals("Open New Game")) {
-                // open dialog to select which game
+                askToSave(false);
             } else if (s.equals("Save")) {
                 // if saved before, save there else perform save as
                 if(fileLocation == null) {
@@ -160,7 +160,7 @@ public class TextEditor {
                 saveAs();
             } else if (s.equals("Load Game")) {
                 // open dialog to select storage location
-                load();
+                askToSave(true);
             } else if (s.equals("Change appearance")) {
 
             } else if (s.equals("Change Code Completion Model")) {
@@ -179,19 +179,25 @@ public class TextEditor {
                 File directory = fileChooser.getSelectedFile();
                 fileLocation = directory.getPath();
             }
-            System.out.println(fileLocation);
+            if(fileLocation == null) {
+                return;
+            }
             String gameDescription = GameFileHandler.readGame(fileLocation);
             textArea.setText(gameDescription.substring(1,gameDescription.length()));
         }
 
         private void save() {
-            String gameDescription = textArea.getText();
-            gameName = NGramUtils.getGameName(gameDescription);
-            gameName = gameName == null ? "New Game" : gameName;
-            if(fileLocation.endsWith(".lud")) {
-                GameFileHandler.writeGame(gameDescription,fileLocation);
+            if(fileLocation == null) {
+                saveAs();
             } else {
-                GameFileHandler.writeGame(gameDescription,fileLocation+"\\"+gameName+".lud");
+                String gameDescription = textArea.getText();
+                gameName = NGramUtils.getGameName(gameDescription);
+                gameName = gameName == null ? "New Game" : gameName;
+                if(fileLocation.endsWith(".lud")) {
+                    GameFileHandler.writeGame(gameDescription,fileLocation);
+                } else {
+                    GameFileHandler.writeGame(gameDescription,fileLocation+"\\"+gameName+".lud");
+                }
             }
         }
 
@@ -205,6 +211,44 @@ public class TextEditor {
                 fileLocation = directory.getPath();
             }
             save();
+        }
+
+        public void askToSave(boolean load) {
+            if(textArea.getText().equals("")) {
+                return;
+            }
+            Dialog d = new Dialog(frame, "Do you want to save your game?");
+            JPanel dPanel = new JPanel(new GridLayout(1,2));
+            JButton yes = new JButton("Yes");
+            yes.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    save();
+                    d.dispose();
+                    textArea.setText("");
+                    if(load) {
+                        load();
+                    }
+                }
+            });
+            dPanel.add(yes);
+            JButton no = new JButton("No");
+            no.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    d.dispose();
+                    textArea.setText("");
+                    if(load) {
+                        load();
+                    }
+                }
+            });
+            dPanel.add(no);
+            d.add(dPanel);
+            d.setSize(new Dimension(500,150));
+            d.setResizable(false);
+            d.setLocationRelativeTo(null);
+            d.setVisible(true);
         }
     }
 
