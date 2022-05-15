@@ -4,11 +4,10 @@ import codecompletion.domain.filehandling.DocHandler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class ProgressBar {
     private final String operationDescription;
-    private JFrame frame;
+    private JDialog dialog;
     private JProgressBar progressBar;
     private final int operationsMax;
     private final String operationName;
@@ -24,16 +23,15 @@ public class ProgressBar {
         init();
     }
 
-    public ProgressBar(String operationName, int operationsMax) {
-        this.operationsMax = operationsMax;
-        this.operationName = operationName;
-        this.operationDescription = "";
-        init();
-    }
-
     private void init(){
         this.progress = 0.0;
-        this.frame = new JFrame(operationName);
+        TextEditor textEditor = TextEditor.getInstance();
+        if(textEditor == null) {
+            this.dialog = new JDialog();
+            dialog.setTitle(operationName);
+        } else {
+            this.dialog = new JDialog(textEditor.getFrame(), operationName);
+        }
         this.panel = new JPanel();
         this.progressBar = new JProgressBar((int) progress);
         this.label = new JLabel(operationDescription);
@@ -43,14 +41,15 @@ public class ProgressBar {
         label.setLabelFor(progressBar);
         panel.add(label);
         panel.add(progressBar);
-        frame.add(panel);
+        dialog.add(panel);
         Image img = new ImageIcon(DocHandler.getInstance().getLogoLocation()).getImage();
-        frame.setIconImage(img);
-        frame.setSize(700, 190);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frame.setResizable(false);
+        dialog.setIconImage(img);
+        dialog.setSize(700, 190);
+        dialog.setLocationRelativeTo(null);
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dialog.setResizable(false);
+        dialog.requestFocus();
+        dialog.setVisible(true);
     }
 
     /**
@@ -61,10 +60,11 @@ public class ProgressBar {
         this.progress = percent*100;
         int progressInt = (int) progress;
         progressBar.setValue(progressInt);
-
-        frame.invalidate();
-        frame.validate();
-        frame.repaint();
+        progressBar.setVisible(true);
+        label.setVisible(true);
+        dialog.invalidate();
+        dialog.validate();
+        dialog.repaint();
     }
 
     /**
@@ -78,11 +78,12 @@ public class ProgressBar {
 
     public void close() {
         progressBar.setString("Finished");
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        long delta = 500;
+        long start = System.currentTimeMillis();
+        long end = System.currentTimeMillis();
+        while (!((end - start) > delta)) {
+            end = System.currentTimeMillis();
         }
-        frame.dispose();
+        dialog.dispose();
     }
 }

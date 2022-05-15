@@ -146,4 +146,15 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
         System.out.println(locations.get(id));
         return getDescription(id);
     }
+
+    public List<String> getNames() {
+        String[] namesArr = new String[getAmountGames()+1];
+        for(Map.Entry<String, Integer> entry : names.entrySet()) {
+            int id = entry.getValue();
+            String name = entry.getKey();
+            namesArr[id] = name;
+        }
+        List<String> namesList = Arrays.asList(namesArr);
+        return namesList;
+    }
 }

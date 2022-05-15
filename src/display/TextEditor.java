@@ -45,14 +45,20 @@ public class TextEditor {
         }
     };
 
-    public TextEditor(String gameDescription, int N) {
-        gameName = NGramUtils.getGameName(gameDescription);
-        this.gameDescription = gameDescription;
-        this.N = N;
-        init();
+    // Singleton
+    private static TextEditor textEditor;
+
+    public static TextEditor getInstance() {
+        return textEditor;
     }
 
-    public TextEditor(int N) {
+    public static void createInstance(int N) {
+        if(textEditor == null) {
+            textEditor = new TextEditor(N);
+        }
+    }
+
+    private TextEditor(int N) {
         gameName = "New Game";
         this.gameDescription = "";
         this.N = N;
@@ -72,6 +78,7 @@ public class TextEditor {
         button = new JButton("Get Picklist");
         button.addActionListener(listener);
         textArea = new JTextArea(30,30);
+        textArea.setFont(new Font(Font.MONOSPACED,Font.BOLD, 22));
         textArea.setText(gameDescription);
         scrollPane = new JScrollPane(textArea);
         panel = new JPanel(new BorderLayout());
@@ -86,6 +93,9 @@ public class TextEditor {
         JMenuItem openNewGame = new JMenuItem("Open New Game");
         openNewGame.addActionListener(listener);
         file.add(openNewGame);
+        JMenuItem openGameFromFile = new JMenuItem("Open Game from File");
+        openGameFromFile.addActionListener(listener);
+        file.add(openGameFromFile);
         JMenuItem save = new JMenuItem("Save");
         save.addActionListener(listener);
         file.add(save);
@@ -97,6 +107,12 @@ public class TextEditor {
         file.add(load);
 
         JMenu options = new JMenu("Options");
+        JMenuItem appearance = new JMenuItem("Change appearance");
+        appearance.addActionListener(listener);
+        options.add(appearance);
+        JMenuItem codeCompletion = new JMenuItem("Change Code Completion Model");
+        codeCompletion.addActionListener(listener);
+        options.add(codeCompletion);
 
         menuBar.add(file);
         menuBar.add(options);
@@ -124,7 +140,6 @@ public class TextEditor {
     }
 
     private class Listener implements ActionListener {
-        // if the button is pressed
         public void actionPerformed(ActionEvent e) {
             String s = e.getActionCommand();
             if (s.equals(button.getActionCommand())) {
@@ -146,6 +161,12 @@ public class TextEditor {
             } else if (s.equals("Load Game")) {
                 // open dialog to select storage location
                 load();
+            } else if (s.equals("Change appearance")) {
+
+            } else if (s.equals("Change Code Completion Model")) {
+                CodeCompletionDialog ccDialog = new CodeCompletionDialog(frame,controller);
+            } else if (s.equals("Open Game from File")) {
+                OpenGameFromFileDialog gameFromFileDialog = new OpenGameFromFileDialog(TextEditor.this);
             }
         }
         private void load() {
@@ -185,5 +206,14 @@ public class TextEditor {
             }
             save();
         }
+    }
+
+    public void openGameFromFile(String location) {
+        String gameDescription = GameFileHandler.readGame(location);
+        textArea.setText(gameDescription.substring(1,gameDescription.length()));
+    }
+
+    public JFrame getFrame() {
+        return frame;
     }
 }
