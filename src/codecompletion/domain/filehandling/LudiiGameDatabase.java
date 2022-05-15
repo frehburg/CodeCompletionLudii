@@ -60,7 +60,8 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
      * This method reads in a file that contains all game names.
      */
     private void fetchGameNames() {
-        String location = "res/lud/gamenames.txt"; //TODO add to dochandler and documents.txt
+        DocHandler docHandler = DocHandler.getInstance();
+        String location = docHandler.getGamesNamesLocation();
 
         Scanner sc = FileUtils.readFile(location);
         int id = 0;
@@ -75,7 +76,9 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
      * This method analyses each game description one by one and writes the name of each game to a file.
      */
     private void fetchGameNamesFromDescriptions() {
-        String location = "res/lud/gamenames.txt";
+        DocHandler docHandler = DocHandler.getInstance();
+        String location = docHandler.getGamesNamesLocation();
+
         FileWriter fw = FileUtils.writeFile(location);
         for(int i = 0; i < getAmountGames(); i++) {
             String gameDescription = getDescription(i);

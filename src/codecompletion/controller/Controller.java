@@ -6,9 +6,12 @@ import codecompletion.domain.filehandling.ModelLibrary;
 import codecompletion.domain.model.*;
 import interfaces.codecompletion.controller.iController;
 import utils.BucketSort;
+import utils.FileUtils;
 import utils.Instance2Ludeme;
 import utils.NGramUtils;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -101,9 +104,18 @@ public class Controller implements iController {
     @Override
     public void close() {
         DocHandler docHandler = DocHandler.getInstance();
+        //find all files in res/models that end in .csv and delete them
+        //because models are stored compressed as .gz
+        String modelsLocation = docHandler.getModelsLocation();
+        List<File> allFilesModels = FileUtils.listFilesForFolder(modelsLocation);
+        for(File f : allFilesModels) {
+            String fPath = f.getPath();
+            if(FileUtils.isFileCSV(fPath)) {
+                FileUtils.deleteFile(fPath);
+            }
+        }
+
         docHandler.close();
-        //TODO: find .csv feel and delete if necessary
-        //find all files in res/models that end in .csv
     }
 
     /**

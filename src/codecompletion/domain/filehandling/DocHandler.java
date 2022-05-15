@@ -12,11 +12,12 @@ import java.util.*;
  */
 public class DocHandler {
     public static final String DOC_LOCATION = "res/documents.txt";
-    public static final String GRAMMAR_LOC = "grammar_location";
-    public static final String GAMES_LOC = "games_location";
-    public static final String MODELS_LOC = "models_location";
-    public static final String MODEL_LOC = "location_model_";
-    public static final String LOGO_LOC = "logo_location";
+    public static final String GRAMMAR = "grammar_location";
+    public static final String GAMES = "games_location";
+    public static final String MODELS = "models_location";
+    public static final String MODEL = "location_model_";
+    public static final String LOGO = "logo_location";
+    public static final String GAMES_NAMES = "games_names_location";
     public static final String SEPARATOR = ":";
     public static final String MODEL_DOES_NOT_EXIST = "MODELDOESNOTEXIST";
 
@@ -30,6 +31,7 @@ public class DocHandler {
 
     //singleton
     private static DocHandler docHandler;
+    private String gamesNamesLocation;
 
     public static DocHandler getInstance() {
         // create object if it's not already created
@@ -65,24 +67,28 @@ public class DocHandler {
      */
     private void parseDocumentsLine(String line) {
         String[] split = line.split(SEPARATOR);
-        if(StringUtils.equals(split[0],GRAMMAR_LOC)) {
+        if(StringUtils.equals(split[0], GRAMMAR)) {
             grammarLocation = split[1];
             if(DEBUG)System.out.println(grammarLocation);
         }
-        if(StringUtils.equals(split[0],GAMES_LOC)) {
+        if(StringUtils.equals(split[0], GAMES)) {
             gamesLocation = split[1];
             if(DEBUG)System.out.println(gamesLocation);
         }
-        if(StringUtils.equals(split[0], LOGO_LOC)) {
+        if(StringUtils.equals(split[0], LOGO)) {
             logoLocation = split[1];
             if(DEBUG)System.out.println(logoLocation);
         }
-        if(StringUtils.equals(split[0],MODELS_LOC)) {
+        if(StringUtils.equals(split[0], MODELS)) {
             modelsLocation = split[1];
             if(DEBUG)System.out.println(modelsLocation);
         }
-        if(split[0].startsWith(MODEL_LOC)) {
-            int N = Integer.parseInt(split[0].charAt(MODEL_LOC.length())+"");
+        if(StringUtils.equals(split[0], GAMES_NAMES)) {
+            gamesNamesLocation = split[1];
+            if(DEBUG)System.out.println(gamesNamesLocation);
+        }
+        if(split[0].startsWith(MODEL)) {
+            int N = Integer.parseInt(split[0].charAt(MODEL.length())+"");
             modelLocations.put(N,split[1]);
             if(DEBUG)System.out.println(modelLocations.get(N));
         }
@@ -96,21 +102,24 @@ public class DocHandler {
         FileWriter fw = FileUtils.writeFile(DOC_LOCATION);
         try {
             if(grammarLocation != null) {
-                    fw.write(GRAMMAR_LOC+SEPARATOR+grammarLocation+"\n");
+                    fw.write(GRAMMAR +SEPARATOR+grammarLocation+"\n");
             }
             if(gamesLocation != null) {
-                fw.write(GAMES_LOC+SEPARATOR+gamesLocation+"\n");
+                fw.write(GAMES +SEPARATOR+gamesLocation+"\n");
             }
             if(logoLocation != null) {
-                fw.write(LOGO_LOC+SEPARATOR+logoLocation+"\n");
+                fw.write(LOGO +SEPARATOR+logoLocation+"\n");
             }
             if(modelsLocation != null) {
-                fw.write(MODELS_LOC+SEPARATOR+modelsLocation+"\n");
+                fw.write(MODELS +SEPARATOR+modelsLocation+"\n");
+            }
+            if(gamesNamesLocation != null) {
+                fw.write(GAMES_NAMES +SEPARATOR+gamesNamesLocation+"\n");
             }
             for(Map.Entry<Integer, String> entry : modelLocations.entrySet()) {
                 int N = entry.getKey();
                 String modelLocation = entry.getValue();
-                fw.write(MODEL_LOC+N+SEPARATOR+modelLocation+"\n");
+                fw.write(MODEL +N+SEPARATOR+modelLocation+"\n");
             }
             fw.close();
         } catch (IOException e) {
@@ -136,6 +145,10 @@ public class DocHandler {
 
     public String getModelsLocation() {
         return modelsLocation;
+    }
+
+    public String getGamesNamesLocation() {
+        return gamesNamesLocation;
     }
 
     public String getModelLocation(int N) {
