@@ -13,21 +13,13 @@ public class Test {
 
     public static void main(String[] args) {
         NGram model = ModelLibrary.getInstance().getModel(6);
-        try {
-            DocHandler.getInstance().writeDocumentsFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        DocHandler.getInstance().writeDocumentsFile();
     }
 
     public static void getMultipleModels(int maxN) {
         for(int N = 2; N <= maxN; N++) {
             ModelLibrary.getInstance().getModel(N);
-            try {
-                DocHandler.getInstance().writeDocumentsFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            DocHandler.getInstance().writeDocumentsFile();
         }
     }
 

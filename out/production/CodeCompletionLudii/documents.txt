@@ -1,3 +1,5 @@
 grammar_location:res/grammar/grammar.txt
 games_location:res/lud
 logo_location:res/img/ludii-logo-64x64.png
+models_location:res/models
+location_model_6:res/models/location_model_6.gz

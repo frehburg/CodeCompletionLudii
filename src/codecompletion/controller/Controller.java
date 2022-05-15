@@ -103,6 +103,7 @@ public class Controller implements iController {
         DocHandler docHandler = DocHandler.getInstance();
         docHandler.close();
         //TODO: find .csv feel and delete if necessary
+        //find all files in res/models that end in .csv
     }
 
     /**

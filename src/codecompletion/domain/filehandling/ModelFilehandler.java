@@ -7,7 +7,7 @@ import utils.Model2CSV;
 import utils.StringUtils;
 
 public class ModelFilehandler {
-    public static final String MODEL_LOCATION = "res/models/ngram_model_";
+    public static final String MODEL_LOCATION = DocHandler.getInstance().getModelsLocation()+"/"+DocHandler.MODEL_LOC;
     /**
      * This method performs the operation of extracting a model from it's file.
      * @param N
