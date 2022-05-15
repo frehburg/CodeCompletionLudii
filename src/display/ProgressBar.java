@@ -1,7 +1,10 @@
 package display;
 
+import codecompletion.domain.filehandling.DocHandler;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class ProgressBar {
     private final String operationDescription;
@@ -36,13 +39,14 @@ public class ProgressBar {
         this.label = new JLabel(operationDescription);
         progressBar.setPreferredSize(new Dimension(650,60));
         progressBar.setStringPainted(true);
-        //TODO: set icon to ludii icon
         label.setFont(new Font("Dialog",Font.BOLD, 20));
         label.setLabelFor(progressBar);
         panel.add(label);
         panel.add(progressBar);
         frame.add(panel);
         // set the size of the frame
+        Image img = new ImageIcon(DocHandler.getInstance().getLogoLocation()).getImage();
+        frame.setIconImage(img);
         frame.setSize(700, 190);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
