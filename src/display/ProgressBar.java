@@ -15,7 +15,6 @@ public class ProgressBar {
 
 
     public ProgressBar(String operationName, String operationDescription, int operationsMax) {
-        System.out.println(javax.swing.UIManager.getDefaults().getFont("Label.font"));
         this.operationsMax = operationsMax;
         this.operationName = operationName;
         this.operationDescription = operationDescription;
@@ -57,7 +56,6 @@ public class ProgressBar {
     public void updateProgress(double percent) {
         this.progress = percent*100;
         int progressInt = (int) progress;
-        System.out.println(progressInt);
         progressBar.setValue(progressInt);
 
         frame.invalidate();
@@ -72,5 +70,15 @@ public class ProgressBar {
     public void updateProgress(int operationsFinished) {
         double percent = (((double) operationsFinished) / ((double) operationsMax));
         updateProgress(percent);
+    }
+
+    public void close() {
+        progressBar.setString("Finished");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        frame.dispose();
     }
 }

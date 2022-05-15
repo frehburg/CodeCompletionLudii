@@ -1,6 +1,7 @@
 import codecompletion.domain.filehandling.DocHandler;
 import codecompletion.domain.filehandling.ModelLibrary;
 import codecompletion.domain.model.NGram;
+import display.ProgressBar;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,13 +12,38 @@ public class Test {
     public static final String VALIDATION = "res/crossvalidation/validationIDs.txt";
 
     public static void main(String[] args) {
-        for(int N = 2; N <= 10; N++) {
+        NGram model = ModelLibrary.getInstance().getModel(6);
+        try {
+            DocHandler.getInstance().writeDocumentsFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void getMultipleModels(int maxN) {
+        for(int N = 2; N <= maxN; N++) {
             ModelLibrary.getInstance().getModel(N);
             try {
                 DocHandler.getInstance().writeDocumentsFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static void testProgressBar() {
+        int billion = 1000000000;
+        ProgressBar pb = new ProgressBar("Count to 1 billion", "Count to 1 billion",100);
+        for(int j = 0; j < 100; j++) {
+            for(int i = 0; i < billion; i++) {
+
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            pb.updateProgress(j);
         }
     }
 

@@ -2,6 +2,7 @@ package codecompletion.domain.filehandling;
 
 import codecompletion.domain.model.ModelCreator;
 import codecompletion.domain.model.NGram;
+import display.ProgressBar;
 import interfaces.codecompletion.domain.filehandling.iModelLibrary;
 import utils.StringUtils;
 
@@ -49,11 +50,16 @@ public class ModelLibrary implements iModelLibrary {
      */
     @Override
     public NGram getModel(int N) {
+        // progress bar
+        ProgressBar pb = new ProgressBar("Fetching Data","",100);
+
         //1. check if it is in the already loaded in models
         NGram model = allModels.getOrDefault(N,null);
         if(model == null) {
-            model = addModel(N);
+            model = addModel(N, pb);
         }
+        pb.updateProgress(100);
+        pb.close();
         return model;
     }
 
@@ -93,16 +99,19 @@ public class ModelLibrary implements iModelLibrary {
      * @param N
      * @return
      */
-    private NGram addModel(int N) {
+    private NGram addModel(int N, ProgressBar pb) {
         NGram model;
+        pb.updateProgress(33);
         //1. check if it exists
         if(docHandler.getModelLocation(N).equals(DocHandler.MODEL_DOES_NOT_EXIST)) {
             //1.a does not exist: create a new one
             model = ModelCreator.createModel(N);
+            pb.updateProgress(90);
 
         } else {
             //1.b model does exist: read it in from file
             model = ModelFilehandler.readModel(N);
+            pb.updateProgress(66);
         }
         //either way add it to the loaded in models
         allModels.put(N,model);

@@ -2,6 +2,8 @@ package utils;
 
 import codecompletion.domain.model.Instance;
 import codecompletion.domain.model.NGram;
+import display.ProgressBar;
+
 import java.util.*;
 
 /**
@@ -20,6 +22,8 @@ public class Model2CSV {
      * @return
      */
     public static void model2csv(NGram model, String location) {
+
+
         Map<String, List<Instance>> dictionary = new HashMap<>();
         int N = model.getN();
 
@@ -27,6 +31,11 @@ public class Model2CSV {
         String header = "KEY,WORDS,MULTIPLICITY,"+N;
         List<String> lines = new ArrayList<>();
 
+        int amtOperations = dictionaryEntrySet.size();
+        //display a progress bar
+        ProgressBar pb = new ProgressBar("Write Model to .csv", "Writing the model to "+location+".",amtOperations);
+
+        int progress = 0;
         for(Map.Entry<String, List<Instance>> entry : dictionaryEntrySet) {
             String key = entry.getKey();
             //csv file splits the strings otherwise
@@ -57,7 +66,12 @@ public class Model2CSV {
                     key = EMPTY_STRING;
                 }
             }
+
+            // update progress bar
+            pb.updateProgress(++progress);
         }
+
+        pb.close();
 
         CSVUtils.writeCSV(location, header, lines);
     }

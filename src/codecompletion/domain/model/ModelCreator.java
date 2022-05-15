@@ -2,6 +2,7 @@ package codecompletion.domain.model;
 
 import codecompletion.domain.filehandling.LudiiGameDatabase;
 import codecompletion.domain.filehandling.ModelFilehandler;
+import display.ProgressBar;
 import utils.FileUtils;
 import utils.NGramUtils;
 
@@ -36,7 +37,11 @@ public class ModelCreator {
         // not all games! therefore not db.getAmountGames()
         int amountGames = gameIDs.size();
 
-        for(int gameID : gameIDs) {
+        //create progressbar
+        ProgressBar pb = new ProgressBar("Creating model","Creating the model from the game description database.",amountGames);
+
+        for(int i = 0; i < amountGames; i++) {
+            int gameID = gameIDs.get(i);
             String curGameDescription = db.getDescription(gameID);
 
             //apply preprocessing
@@ -44,24 +49,19 @@ public class ModelCreator {
 
 //            //add all instances of length in {2,...,N}
 //            for(int i = 2; i <= N; i++) {
-//                List<List<String>> substrings = NGramUtils.allSubstrings(cleanGameDescription, i);
-//                for(List<String> substring : substrings) {
-//                    Instance curInstance = NGramUtils.createInstance(substring);
-//                    if(curInstance != null) {
-//                        model.addInstanceToModel(curInstance);
-//                    }
-//                }
-//            }
-
-            //just add the instances of length N
-            List<List<String>> substrings = NGramUtils.allSubstrings(cleanGameDescription, N);
+                List<List<String>> substrings = NGramUtils.allSubstrings(cleanGameDescription, N);
                 for(List<String> substring : substrings) {
                     Instance curInstance = NGramUtils.createInstance(substring);
                     if(curInstance != null) {
                         model.addInstanceToModel(curInstance);
                     }
                 }
+//            }
+            //update progressbar
+            pb.updateProgress(i);
         }
+        //discard of the progressbar
+        pb.close();
         //if the model is only created for validation purposes, it is not written to a file
         if(!validation) {
             ModelFilehandler.writeModel(model);
