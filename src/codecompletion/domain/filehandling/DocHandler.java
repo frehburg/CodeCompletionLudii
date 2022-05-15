@@ -15,6 +15,7 @@ public class DocHandler {
     public static final String GRAMMAR_LOC = "grammar_location";
     public static final String GAMES_LOC = "games_location";
     public static final String MODEL_LOC = "location_model_";
+    public static final String LOGO_LOC = "logo_location";
     public static final String SEPARATOR = ":";
     public static final String MODEL_DOES_NOT_EXIST = "MODELDOESNOTEXIST";
 
@@ -22,6 +23,7 @@ public class DocHandler {
 
     private String grammarLocation;
     private String gamesLocation;
+    private String logoLocation;
     private Map<Integer,String> modelLocations;
 
     //singleton
@@ -69,6 +71,10 @@ public class DocHandler {
             gamesLocation = split[1];
             if(DEBUG)System.out.println(gamesLocation);
         }
+        if(StringUtils.equals(split[0], LOGO_LOC)) {
+            logoLocation = split[1];
+            if(DEBUG)System.out.println(logoLocation);
+        }
         if(split[0].startsWith(MODEL_LOC)) {
             int N = Integer.parseInt(split[0].charAt(MODEL_LOC.length())+"");
             modelLocations.put(N,split[1]);
@@ -88,6 +94,9 @@ public class DocHandler {
         if(gamesLocation != null) {
             fw.write(GAMES_LOC+SEPARATOR+gamesLocation+"\n");
         }
+        if(logoLocation != null) {
+            fw.write(LOGO_LOC+SEPARATOR+logoLocation+"\n");
+        }
         for(Map.Entry<Integer, String> entry : modelLocations.entrySet()) {
             int N = entry.getKey();
             String modelLocation = entry.getValue();
@@ -106,6 +115,10 @@ public class DocHandler {
 
     public String getGamesLocation() {
         return gamesLocation;
+    }
+
+    public String getLogoLocation() {
+        return logoLocation;
     }
 
     public String getModelLocation(int N) {

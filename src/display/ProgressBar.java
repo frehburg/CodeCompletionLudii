@@ -36,6 +36,7 @@ public class ProgressBar {
         this.label = new JLabel(operationDescription);
         progressBar.setPreferredSize(new Dimension(650,60));
         progressBar.setStringPainted(true);
+        //TODO: set icon to ludii icon
         label.setFont(new Font("Dialog",Font.BOLD, 20));
         label.setLabelFor(progressBar);
         panel.add(label);
