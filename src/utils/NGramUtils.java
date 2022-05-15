@@ -4,6 +4,7 @@ import codecompletion.domain.model.Context;
 import codecompletion.domain.model.Instance;
 import codecompletion.domain.model.Preprocessing;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -105,5 +106,41 @@ public class NGramUtils {
         List<String> words = Arrays.asList(context.split(" "));
         Context contextObject = new Context(words);
         return contextObject;
+    }
+
+    public static List<Pair<Instance,Integer>> calculateMatchingWords(List<Instance> unorderedPicklist, Context context) {
+        List<Pair<Instance,Integer>> unorderedPicklistMatchingWords = new ArrayList<>();
+        for(Instance instance : unorderedPicklist) {
+            int matchingWords = instance.matchingWords(context);
+            Pair<Instance,Integer> cur = new Pair<>(instance, matchingWords);
+            unorderedPicklistMatchingWords.add(cur);
+        }
+        return  unorderedPicklistMatchingWords;
+    }
+
+    /**
+     * This method extracts the name of a game out of its description as lud code
+     * @param gameDescription
+     * @return
+     */
+    public static String getGameName(String gameDescription) {
+        String gameLudeme = "(game";
+        int gameLocation = gameDescription.lastIndexOf(gameLudeme);
+        char[] gameDescrChars = gameDescription.toCharArray();
+        String gameName = "";
+        boolean start = false;
+        // iterate over game description to find the name of the game
+        loop:for(int j = gameLocation; j < gameDescription.length(); j++) {
+            char cur = gameDescrChars[j];
+            if(cur == '"' && !start) {
+                start = true;
+            }  else if(cur == '"' && start) {
+                // found end of string
+                break loop;
+            } else if(start) {
+                gameName += cur;
+            }
+        }
+        return gameName;
     }
 }

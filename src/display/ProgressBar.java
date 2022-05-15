@@ -44,7 +44,6 @@ public class ProgressBar {
         panel.add(label);
         panel.add(progressBar);
         frame.add(panel);
-        // set the size of the frame
         Image img = new ImageIcon(DocHandler.getInstance().getLogoLocation()).getImage();
         frame.setIconImage(img);
         frame.setSize(700, 190);

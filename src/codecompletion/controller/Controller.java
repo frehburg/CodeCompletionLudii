@@ -5,10 +5,7 @@ import codecompletion.domain.filehandling.DocHandler;
 import codecompletion.domain.filehandling.ModelLibrary;
 import codecompletion.domain.model.*;
 import interfaces.codecompletion.controller.iController;
-import utils.BucketSort;
-import utils.FileUtils;
-import utils.Instance2Ludeme;
-import utils.NGramUtils;
+import utils.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,6 +15,8 @@ import java.util.List;
  * @author filreh
  */
 public class Controller implements iController {
+
+    private static final int MAX_PICKLIST_LENGTH = 50;
 
     private int N;
     private ModelLibrary lib;
@@ -60,8 +59,11 @@ public class Controller implements iController {
         List<Instance> match = model.getMatch(context.getKey());
         // 3. type-meatching
         List<Instance> unorderedPicklist = grammar.filterOutInvalid(context,match);
-        // 4. Sorting after matching words and multiplicity
-        List<Instance> picklist = BucketSort.sort(unorderedPicklist);
+        // 4. Calculate Number of Matching words
+        List<Pair<Instance,Integer>> unorderedPicklistMatchingWords
+                = NGramUtils.calculateMatchingWords(unorderedPicklist,context);
+        // 5. Sorting after matching words and multiplicity
+        List<Instance> picklist = BucketSort.sort(unorderedPicklistMatchingWords, MAX_PICKLIST_LENGTH);
         // convert to ludemes
         List<Ludeme> picklistLudemes = Instance2Ludeme.foreachInstance2ludeme(picklist);
         return picklistLudemes;

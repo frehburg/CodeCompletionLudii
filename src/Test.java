@@ -1,10 +1,19 @@
+import codecompletion.Ludeme;
 import codecompletion.domain.filehandling.DocHandler;
+import codecompletion.domain.filehandling.LudiiGameDatabase;
 import codecompletion.domain.filehandling.ModelLibrary;
+import codecompletion.domain.model.Instance;
 import codecompletion.domain.model.NGram;
+import codecompletion.domain.model.Preprocessing;
 import display.ProgressBar;
+import utils.BucketSort;
+import utils.Instance2Ludeme;
+import utils.Pair;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Test {
     private static final String COMMA = ",";
@@ -12,8 +21,20 @@ public class Test {
     public static final String VALIDATION = "res/crossvalidation/validationIDs.txt";
 
     public static void main(String[] args) {
-        NGram model = ModelLibrary.getInstance().getModel(6);
-        DocHandler.getInstance().writeDocumentsFile();
+        List<Pair<Instance,Integer>> unorderedPicklist = new ArrayList<>();
+        for(int i = 0; i < 60; i++) {
+            ArrayList<String> a = new ArrayList<>();
+            a.add("Word"+i);
+            a.add("Abc");
+            Random r = new Random();
+            int matchingWords =  r.nextInt(7);
+            int multiplicity = r.nextInt(2000);
+            //System.out.println("i "+i+" matching "+ matchingWords);
+            unorderedPicklist.add(new Pair<>(new Instance(a,multiplicity),matchingWords));
+        }
+
+        List<Instance> picklist = BucketSort.sort(unorderedPicklist,15);
+        List<Ludeme> picklistLudemes = Instance2Ludeme.foreachInstance2ludeme(picklist);
     }
 
     public static void getMultipleModels(int maxN) {

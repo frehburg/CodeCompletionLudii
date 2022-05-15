@@ -2,6 +2,7 @@ package codecompletion.domain.filehandling;
 
 import interfaces.codecompletion.domain.filehandling.iLudiiGameDatabase;
 import utils.FileUtils;
+import utils.NGramUtils;
 import utils.StringUtils;
 
 import java.io.File;
@@ -82,29 +83,14 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
         FileWriter fw = FileUtils.writeFile(location);
         for(int i = 0; i < getAmountGames(); i++) {
             String gameDescription = getDescription(i);
-            String gameLudeme = "(game";
-            int gameLocation = gameDescription.lastIndexOf(gameLudeme);
-            char[] gameDescrChars = gameDescription.toCharArray();
-            String gameName = "";
-            boolean start = false;
-            // iterate over game description to find the name of the game
-            loop:for(int j = 0; j < gameDescription.length(); j++) {
-                char cur = gameDescrChars[j];
-                if(cur == '"' && !start) {
-                    start = true;
-                }  else if(cur == '"' && start) {
-                    // found end of string
-                    break loop;
-                } else if(start) {
-                    gameName += cur;
-                }
-            }
+            String gameName = NGramUtils.getGameName(gameDescription);
+            names.put(gameName, i);
+
             try {
                 fw.write(gameName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            names.put(gameName, i);
         }
     }
 
@@ -141,16 +127,8 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
 
         // else, reads it in
         if(StringUtils.equals(description,"null")) {
-            description = "";
             String location = locations.get(id);
-            //reads line by line
-            Scanner sc = FileUtils.readFile(location);
-            while (sc.hasNext()) {
-                String nextLine = sc.nextLine();
-                description += "\n"+nextLine;
-            }
-            sc.close();
-
+            description = GameFileHandler.readGame(location);
         }
         return description;
     }
