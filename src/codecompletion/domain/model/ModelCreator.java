@@ -2,15 +2,19 @@ package codecompletion.domain.model;
 
 import codecompletion.domain.filehandling.LudiiGameDatabase;
 import codecompletion.domain.filehandling.ModelFilehandler;
+import utils.FileUtils;
 import utils.NGramUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * @author filreh
  */
 public class ModelCreator {
+    public static final String TRAINING = "res/crossvalidation/trainingIDs.txt";
+    public static final String VALIDATION = "res/crossvalidation/validationIDs.txt";
     /**
      * This method should only be called as part of the validation process or by the ModelLibrary
      * This method creates a new model and writes a model to a .gz file.
@@ -38,16 +42,25 @@ public class ModelCreator {
             //apply preprocessing
             String cleanGameDescription = Preprocessing.preprocess(curGameDescription);
 
-            //add all instances of length in {2,...,N}
-            for(int i = 2; i <= N; i++) {
-                List<List<String>> substrings = NGramUtils.allSubstrings(cleanGameDescription, i);
+//            //add all instances of length in {2,...,N}
+//            for(int i = 2; i <= N; i++) {
+//                List<List<String>> substrings = NGramUtils.allSubstrings(cleanGameDescription, i);
+//                for(List<String> substring : substrings) {
+//                    Instance curInstance = NGramUtils.createInstance(substring);
+//                    if(curInstance != null) {
+//                        model.addInstanceToModel(curInstance);
+//                    }
+//                }
+//            }
+
+            //just add the instances of length N
+            List<List<String>> substrings = NGramUtils.allSubstrings(cleanGameDescription, N);
                 for(List<String> substring : substrings) {
                     Instance curInstance = NGramUtils.createInstance(substring);
                     if(curInstance != null) {
                         model.addInstanceToModel(curInstance);
                     }
                 }
-            }
         }
         //if the model is only created for validation purposes, it is not written to a file
         if(!validation) {
@@ -67,13 +80,19 @@ public class ModelCreator {
     public static NGram createModel(int N) {
         List<Integer> gameIDs = new ArrayList<>();
         LudiiGameDatabase db = LudiiGameDatabase.getInstance();
-
+        List<Integer> trainingsIDs = new ArrayList<>();
+        Scanner sc = FileUtils.readFile(TRAINING);
+        while (sc.hasNextLine()) {
+            int id = Integer.parseInt(sc.nextLine());
+            trainingsIDs.add(id);
+        }
         int amountGames = db.getAmountGames();
 
         for (int i = 0; i < amountGames; i++) {
             gameIDs.add(i);
         }
 
-        return createModel(N, gameIDs, false);
+        //return createModel(N, gameIDs, false);
+        return createModel(N, trainingsIDs, false);
     }
 }

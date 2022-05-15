@@ -1,3 +1,11 @@
 grammar_location:res/grammar/grammar.txt
 games_location:res/lud
 location_model_2:res/models/ngram_model_2.gz
+location_model_3:res/models/ngram_model_3.gz
+location_model_4:res/models/ngram_model_4.gz
+location_model_5:res/models/ngram_model_5.gz
+location_model_6:res/models/ngram_model_6.gz
+location_model_7:res/models/ngram_model_7.gz
+location_model_8:res/models/ngram_model_8.gz
+location_model_9:res/models/ngram_model_9.gz
+location_model_10:res/models/ngram_model_10.gz
