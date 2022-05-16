@@ -1,6 +1,11 @@
 package display;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.multi.MultiLookAndFeel;
@@ -23,8 +28,7 @@ public class AppearanceDialog {
 
     public AppearanceDialog(TextEditor textEditor) {
         this.textEditor = textEditor;
-        changeFontSize(30);
-        changeFontStyle(Font.PLAIN);
+        darkMode();
         //init();
     }
 
@@ -42,6 +46,7 @@ public class AppearanceDialog {
 
         spinnerNumberModel = new SpinnerNumberModel(22,5,50,1);
         spinner = new JSpinner(spinnerNumberModel);
+        spinner.addChangeListener(listener);
         panel.add(spinner);
 
     }
@@ -60,51 +65,24 @@ public class AppearanceDialog {
 
     private void lightMode() {
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            Color control = UIManager.getColor("control");
-            Color info = UIManager.getColor("info");
-            Color text = UIManager.getColor("text");
-            UIManager.put("control", control);
-            UIManager.put("info", info);
-            UIManager.put("text", text);
+            UIManager.setLookAndFeel( new FlatLightLaf());
             SwingUtilities.updateComponentTreeUI(textEditor.getFrame());
-        } catch (ClassNotFoundException | IllegalAccessException | UnsupportedLookAndFeelException | InstantiationException e) {
-            e.printStackTrace();
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
         }
     }
 
     private void darkMode() {
         // Dark LAF
         try {
-           UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            Color control = new Color(128, 128, 128);
-            Color info = new Color(128, 128, 128);
-            Color text = new Color(230, 230, 230);
-            UIManager.getLookAndFeelDefaults().put("text",text);
-            UIManager.getLookAndFeelDefaults().put("info",info);
-            UIManager.getLookAndFeelDefaults().put("control",control);
+            UIManager.setLookAndFeel( new FlatDarculaLaf());
             SwingUtilities.updateComponentTreeUI(textEditor.getFrame());
-//            UIManager.put("control", new Color(128, 128, 128));
-//            UIManager.put("info", new Color(128, 128, 128));
-//            UIManager.put("nimbusBase", new Color(18, 30, 49));
-//            UIManager.put("nimbusAlertYellow", new Color(248, 187, 0));
-//            UIManager.put("nimbusDisabledText", new Color(128, 128, 128));
-//            UIManager.put("nimbusFocus", new Color(115, 164, 209));
-//            UIManager.put("nimbusGreen", new Color(176, 179, 50));
-//            UIManager.put("nimbusInfoBlue", new Color(66, 139, 221));
-//            UIManager.put("nimbusLightBackground", new Color(18, 30, 49));
-//            UIManager.put("nimbusOrange", new Color(191, 98, 4));
-//            UIManager.put("nimbusRed", new Color(169, 46, 34));
-//            UIManager.put("nimbusSelectedText", new Color(255, 255, 255));
-//            UIManager.put("nimbusSelectionBackground", new Color(104, 93, 156));
-//            UIManager.put("text", new Color(230, 230, 230));
-//            SwingUtilities.updateComponentTreeUI(textEditor.getFrame());
-        } catch (ClassNotFoundException | IllegalAccessException | UnsupportedLookAndFeelException | InstantiationException e) {
-            e.printStackTrace();
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
         }
     }
 
-    private class Listener implements ActionListener {
+    private class Listener implements ActionListener, ChangeListener {
         public void actionPerformed(ActionEvent e) {
             //this triggers the dialog to dispose
 
@@ -113,7 +91,17 @@ public class AppearanceDialog {
             } else {
                 lightMode();
             }
-            dialog.dispose();
+        }
+
+        /**
+         * Invoked when the target of the listener has changed its state.
+         *
+         * @param e a ChangeEvent object
+         */
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            //change font size
+            changeFontSize((int)spinnerNumberModel.getValue());
         }
     }
 }
