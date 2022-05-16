@@ -3,6 +3,8 @@ package display;
 import codecompletion.controller.Controller;
 import codecompletion.domain.filehandling.DocHandler;
 import codecompletion.domain.filehandling.GameFileHandler;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import utils.NGramUtils;
 
 import javax.swing.*;
@@ -67,9 +69,9 @@ public class TextEditor {
 
     private void init() {
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | IllegalAccessException | UnsupportedLookAndFeelException | InstantiationException e) {
-            e.printStackTrace();
+            UIManager.setLookAndFeel( new FlatIntelliJLaf());
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
         }
         controller = new Controller(N);
         fileChooser = new JFileChooser("res/");
