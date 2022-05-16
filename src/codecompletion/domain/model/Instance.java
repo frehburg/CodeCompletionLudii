@@ -4,6 +4,8 @@ import interfaces.codecompletion.domain.model.iInstance;
 import utils.ListUtils;
 import utils.StringUtils;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 
 /**

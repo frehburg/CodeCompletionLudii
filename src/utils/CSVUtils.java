@@ -26,7 +26,7 @@ public class CSVUtils {
         try {
             fw.write(header);
             for(String line : lines) {
-                fw.write(line);
+                fw.write("\n"+line);
             }
             fw.close();
         } catch (IOException e) {

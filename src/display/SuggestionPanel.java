@@ -1,19 +1,27 @@
 package display;
 
+import codecompletion.Ludeme;
+import codecompletion.controller.Controller;
+
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
+
+import static codecompletion.domain.model.Preprocessing.INSERT_REC_WILDCARD;
 
 public class SuggestionPanel {
     private final JTextArea textarea;
     private final int position;
+    private final Controller controller;
     private JList list;
     private JPopupMenu popupMenu;
     private final int insertionPosition;
 
-    public SuggestionPanel(JTextArea textarea, int position, Point location) {
+    public SuggestionPanel(JTextArea textarea, int position, Point location, Controller controller) {
+        this.controller = controller;
         this.textarea = textarea;
         this.position = position;
         this.insertionPosition = position;
@@ -33,8 +41,12 @@ public class SuggestionPanel {
     }
 
     private JList createSuggestionList(final int position) {
-        //TODO: add recs here
-        Object[] data = new String[] {"(game","(equipment","Add","(to","(sites","Empty"};
+        // create the contextString
+        String contextString = textarea.getText().substring(0,position);
+        System.out.println("CONTEXTSTRING"+contextString+"end");
+        List<Ludeme> picklist = controller.getPicklist(contextString);
+        System.out.println(contextString);
+        Object[] data = picklist.toArray(new Ludeme[0]);
         JList list = new JList(data);
         list.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -53,7 +65,7 @@ public class SuggestionPanel {
     public boolean insertSelection() {
         if (list.getSelectedValue() != null) {
             try {
-                final String selectedSuggestion = ((String) list.getSelectedValue());
+                final String selectedSuggestion = ((String) list.getSelectedValue().toString());
                 textarea.getDocument().insertString(insertionPosition, selectedSuggestion + " ", null);
                 hide(this);
                 return true;

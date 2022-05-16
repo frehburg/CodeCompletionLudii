@@ -3,6 +3,7 @@ package interfaces.codecompletion.domain.model;
 import codecompletion.domain.model.Instance;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author filreh
@@ -27,4 +28,10 @@ public interface iNGram {
      * @return
      */
     int getN();
+
+    /**
+     * Returns the Map object containing the NGram
+     * @return
+     */
+    Map<String, List<Instance>> getDictionary();
 }

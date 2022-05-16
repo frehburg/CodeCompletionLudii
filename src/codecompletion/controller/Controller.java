@@ -8,7 +8,6 @@ import interfaces.codecompletion.controller.iController;
 import utils.*;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,11 +58,10 @@ public class Controller implements iController {
         List<Instance> match = model.getMatch(context.getKey());
         // 3. type-meatching
         List<Instance> unorderedPicklist = grammar.filterOutInvalid(context,match);
-        // 4. Calculate Number of Matching words
-        List<Pair<Instance,Integer>> unorderedPicklistMatchingWords
-                = NGramUtils.calculateMatchingWords(unorderedPicklist,context);
+        // 4. Calculate Number of Matching words & Remove duplicate predictions
+        List<Pair<Instance, Integer>> uniquePredictions = NGramUtils.uniteDuplicatePredictions(unorderedPicklist, context);
         // 5. Sorting after matching words and multiplicity
-        List<Instance> picklist = BucketSort.sort(unorderedPicklistMatchingWords, MAX_PICKLIST_LENGTH);
+        List<Instance> picklist = BucketSort.sort(uniquePredictions, MAX_PICKLIST_LENGTH);
         // convert to ludemes
         List<Ludeme> picklistLudemes = Instance2Ludeme.foreachInstance2ludeme(picklist);
         return picklistLudemes;

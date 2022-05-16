@@ -61,16 +61,16 @@ public class ModelCreator {
                     //apply preprocessing
                     String cleanGameDescription = Preprocessing.preprocess(curGameDescription);
 
-        //            //add all instances of length in {2,...,N}
-        //            for(int i = 2; i <= N; i++) {
-                        List<List<String>> substrings = NGramUtils.allSubstrings(cleanGameDescription, N);
+                    //add all instances of length in {2,...,N}
+                    for(int j = 2; j <= N; j++) {
+                        List<List<String>> substrings = NGramUtils.allSubstrings(cleanGameDescription, j);
                         for(List<String> substring : substrings) {
                             Instance curInstance = NGramUtils.createInstance(substring);
                             if(curInstance != null) {
                                 model.addInstanceToModel(curInstance);
                             }
                         }
-        //            }
+                    }
                     //update progressbar
                     double percent = (((double) i) / ((double) amountGames));
                     int progress = (int) (percent*100.0);
@@ -106,6 +106,7 @@ public class ModelCreator {
         pb.close();
         //if the model is only created for validation purposes, it is not written to a file
         if(!validation) {
+            System.out.println("ModelCreator:WriteModel");
             ModelFilehandler.writeModel(model);
         }
         return model;

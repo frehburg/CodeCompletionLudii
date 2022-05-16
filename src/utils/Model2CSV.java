@@ -22,9 +22,7 @@ public class Model2CSV {
      * @return
      */
     public static void model2csv(NGram model, String location) {
-
-
-        Map<String, List<Instance>> dictionary = new HashMap<>();
+        Map<String, List<Instance>> dictionary = model.getDictionary();
         int N = model.getN();
 
         Set<Map.Entry<String, List<Instance>>> dictionaryEntrySet = dictionary.entrySet();
@@ -124,8 +122,12 @@ public class Model2CSV {
             } else {
                 value = new ArrayList<>();
             }
-            value.add(new Instance(words,multiplicity));
-            dictionary.put(key,value);
+            if(words.size() > 1) {
+                value.add(new Instance(words,multiplicity));
+                dictionary.put(key,value);
+            } else if(words.size() == 1){
+                value.add(new Instance(Arrays.asList("",words.get(0)), multiplicity));
+            }
 
         }
 

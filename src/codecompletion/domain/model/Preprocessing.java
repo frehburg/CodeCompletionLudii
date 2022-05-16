@@ -11,6 +11,7 @@ public class Preprocessing {
     public static final String BOOLEAN_WILDCARD = "BOOLEAN";
     public static final String STRING_WILDCARD = "STRING";
     public static final String OPTION_WILDCARD = "STRING";
+    public static final String INSERT_REC_WILDCARD = "--REC--";
 
     /**
      * This method applies all the necessary steps of preprocessing.

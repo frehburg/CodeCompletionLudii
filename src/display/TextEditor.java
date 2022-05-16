@@ -175,8 +175,7 @@ public class TextEditor {
             e2.printStackTrace();
             return;
         }
-        String text = textArea.getText();
-        suggestion = new SuggestionPanel(textArea, position, location);
+        suggestion = new SuggestionPanel(textArea, position, location, controller);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
