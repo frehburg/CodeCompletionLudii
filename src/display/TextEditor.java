@@ -161,8 +161,9 @@ public class TextEditor {
             } else if (s.equals("Load Game")) {
                 // open dialog to select storage location
                 askToSave(true);
+                System.out.println("Recevied button press");
             } else if (s.equals("Change appearance")) {
-
+                AppearanceDialog appearanceDialog = new AppearanceDialog(TextEditor.this);
             } else if (s.equals("Change Code Completion Model")) {
                 CodeCompletionDialog ccDialog = new CodeCompletionDialog(frame,controller);
             } else if (s.equals("Open Game from File")) {
@@ -170,6 +171,7 @@ public class TextEditor {
             }
         }
         private void load() {
+            System.out.println("In method");
             fileChooser = new JFileChooser("res/");
             fileChooser.setDialogTitle("Choose a game to load in");
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -214,7 +216,11 @@ public class TextEditor {
         }
 
         public void askToSave(boolean load) {
+            System.out.println("In ask to save");
             if(textArea.getText().equals("")) {
+                if(load) {
+                    load();
+                }
                 return;
             }
             Dialog d = new Dialog(frame, "Do you want to save your game?");
@@ -259,5 +265,9 @@ public class TextEditor {
 
     public JFrame getFrame() {
         return frame;
+    }
+
+    public JTextArea getTextArea() {
+        return textArea;
     }
 }

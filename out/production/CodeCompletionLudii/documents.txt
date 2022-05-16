@@ -3,3 +3,5 @@ games_location:res/lud
 logo_location:res/img/ludii-logo-64x64.png
 models_location:res/models
 games_names_location:res/gamenames.txt
+location_model_2:res/models/ngram_model_2.gz
+location_model_7:res/models/ngram_model_7.gz
