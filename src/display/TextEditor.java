@@ -31,6 +31,7 @@ public class TextEditor {
     private JPanel panel;
     private JScrollPane scrollPane;
     private JMenuBar menuBar;
+    private TextLineNumber textLineNumber;
     private JFileChooser fileChooser;
 
     private String gameName;
@@ -87,7 +88,9 @@ public class TextEditor {
         MakeUndoable.makeUndoable(textArea);
         textArea.setFont(new Font(Font.MONOSPACED,Font.BOLD, 22));
         textArea.setText(gameDescription);
+        textLineNumber = new TextLineNumber(textArea);
         scrollPane = new JScrollPane(textArea);
+        scrollPane.setRowHeaderView(textLineNumber);
         panel = new JPanel(new BorderLayout());
         panel.add(scrollPane, BorderLayout.CENTER);
 
