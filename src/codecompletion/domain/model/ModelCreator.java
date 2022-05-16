@@ -6,9 +6,13 @@ import display.ProgressBar;
 import utils.FileUtils;
 import utils.NGramUtils;
 
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author filreh
@@ -29,6 +33,7 @@ public class ModelCreator {
      * @return
      */
     public static NGram createModel(int N, List<Integer> gameIDs, boolean validation) {
+
         NGram model = new NGram(N);
 
         LudiiGameDatabase db = LudiiGameDatabase.getInstance();
@@ -39,26 +44,63 @@ public class ModelCreator {
 
         //create progressbar
         ProgressBar pb = new ProgressBar("Creating model","Creating the model from the game description database.",amountGames);
+        //multithreading start
 
-        for(int i = 0; i < amountGames; i++) {
-            int gameID = gameIDs.get(i);
-            String curGameDescription = db.getDescription(gameID);
+        //    T - the result type returned by this SwingWorker's doInBackground and  get methods
+        //    V - the type used for carrying out intermediate results by this SwingWorker's
+        //        publish and process methods
+        SwingWorker<NGram,Integer> modelCreatorTask = new SwingWorker<NGram, Integer>() {
 
-            //apply preprocessing
-            String cleanGameDescription = Preprocessing.preprocess(curGameDescription);
+            @Override
+            protected NGram doInBackground() throws Exception {
+                NGram model = new NGram(N);
+                for(int i = 0; i < amountGames; i++) {
+                    int gameID = gameIDs.get(i);
+                    String curGameDescription = db.getDescription(gameID);
 
-//            //add all instances of length in {2,...,N}
-//            for(int i = 2; i <= N; i++) {
-                List<List<String>> substrings = NGramUtils.allSubstrings(cleanGameDescription, N);
-                for(List<String> substring : substrings) {
-                    Instance curInstance = NGramUtils.createInstance(substring);
-                    if(curInstance != null) {
-                        model.addInstanceToModel(curInstance);
-                    }
+                    //apply preprocessing
+                    String cleanGameDescription = Preprocessing.preprocess(curGameDescription);
+
+        //            //add all instances of length in {2,...,N}
+        //            for(int i = 2; i <= N; i++) {
+                        List<List<String>> substrings = NGramUtils.allSubstrings(cleanGameDescription, N);
+                        for(List<String> substring : substrings) {
+                            Instance curInstance = NGramUtils.createInstance(substring);
+                            if(curInstance != null) {
+                                model.addInstanceToModel(curInstance);
+                            }
+                        }
+        //            }
+                    //update progressbar
+                    double percent = (((double) i) / ((double) amountGames));
+                    int progress = (int) (percent*100.0);
+                    setProgress(progress);
+                    Thread.sleep(125);
                 }
-//            }
-            //update progressbar
-            pb.updateProgress(i);
+                System.out.println("DONE");
+                return model;
+            }
+
+            @Override
+            public void process(List<Integer> chunks) {
+                for(int chunk : chunks) {
+                    pb.updateProgress(chunk);
+                }
+            }
+        };
+
+        modelCreatorTask.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                double percent = (modelCreatorTask.getProgress() / 100.0);
+                pb.updateProgress(percent);
+            }
+        });
+        modelCreatorTask.execute();
+        try {
+            model = modelCreatorTask.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
         //discard of the progressbar
         pb.close();

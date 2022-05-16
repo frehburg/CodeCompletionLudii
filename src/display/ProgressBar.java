@@ -1,6 +1,7 @@
 package display;
 
 import codecompletion.domain.filehandling.DocHandler;
+import codecompletion.domain.model.NGram;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,20 +25,20 @@ public class ProgressBar {
     }
 
     private void init(){
-        this.progress = 0.0;
+        progress = 0.0;
         TextEditor textEditor = TextEditor.getInstance();
-        if(textEditor == null) {
-            this.dialog = new JDialog();
+        if (textEditor == null) {
+            dialog = new JDialog();
             dialog.setTitle(operationName);
         } else {
-            this.dialog = new JDialog(textEditor.getFrame(), operationName);
+            dialog = new JDialog(textEditor.getFrame(), operationName);
         }
-        this.panel = new JPanel();
-        this.progressBar = new JProgressBar((int) progress);
-        this.label = new JLabel(operationDescription);
-        progressBar.setPreferredSize(new Dimension(650,60));
+        panel = new JPanel();
+        progressBar = new JProgressBar((int) progress);
+        label = new JLabel(operationDescription);
+        progressBar.setPreferredSize(new Dimension(650, 60));
         progressBar.setStringPainted(true);
-        label.setFont(new Font("Dialog",Font.BOLD, 20));
+        label.setFont(new Font("Dialog", Font.BOLD, 20));
         label.setLabelFor(progressBar);
         panel.add(label);
         panel.add(progressBar);
@@ -62,6 +63,7 @@ public class ProgressBar {
         progressBar.setValue(progressInt);
         progressBar.setVisible(true);
         label.setVisible(true);
+        System.out.println(progressInt);
         dialog.invalidate();
         dialog.validate();
         dialog.repaint();

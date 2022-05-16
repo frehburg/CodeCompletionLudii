@@ -18,8 +18,10 @@ public class CodeCompletionDialog {
     private JSpinner spinner;
     private SpinnerNumberModel spinnerNumberModel;
     private JButton button;
+    private JButton defaultNButton;
     private JPanel panel;
     private Listener listener;
+    private  JPanel buttonPanel;
 
     private int selectedN;
     private Controller controller;
@@ -27,11 +29,18 @@ public class CodeCompletionDialog {
     public CodeCompletionDialog(JFrame frame, Controller controller) {
         listener = new Listener();
         this.controller = controller;
-        selectedN = 7;
+        selectedN = controller.getN();
         label = new JLabel("Select the value of the Code Completion model parameter N:");
         button = new JButton("Change N");
         button.addActionListener(listener);
-        spinnerNumberModel = new SpinnerNumberModel(7,2,20,1);
+        defaultNButton = new JButton("Set Default (N=7)");
+        defaultNButton.addActionListener(listener);
+
+        buttonPanel = new JPanel(new GridLayout(1,2));
+        buttonPanel.add(defaultNButton);
+        buttonPanel.add(button);
+
+        spinnerNumberModel = new SpinnerNumberModel(selectedN,2,20,1);
         spinner = new JSpinner(spinnerNumberModel);
         spinner.addChangeListener(listener);
         ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField().setEditable(false);
@@ -40,12 +49,12 @@ public class CodeCompletionDialog {
 
         panel.add(label,BorderLayout.NORTH);
         panel.add(spinner,BorderLayout.CENTER);
-        panel.add(button,BorderLayout.SOUTH);
+        panel.add(buttonPanel,BorderLayout.SOUTH);
 
         this.dialog = new JDialog(frame,"Change Code Completion Model");
         this.dialog.setLayout(new BorderLayout());
         this.dialog.add(panel, BorderLayout.CENTER);
-        this.dialog.setSize(new Dimension(420,340));
+        this.dialog.setSize(new Dimension(630,200));
         this.dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.dialog.setLocationRelativeTo(null);
         Image img = new ImageIcon(DocHandler.getInstance().getLogoLocation()).getImage();
@@ -56,6 +65,9 @@ public class CodeCompletionDialog {
 
     private class Listener implements ActionListener, ChangeListener {
         public void actionPerformed(ActionEvent e) {
+            if(e.getActionCommand().equals(defaultNButton.getActionCommand())) {
+                spinnerNumberModel.setValue(7);
+            }
             dialog.dispose();
             ModelLibrary lib = ModelLibrary.getInstance();
             NGram model = lib.getModel(selectedN);

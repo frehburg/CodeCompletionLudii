@@ -6,10 +6,12 @@ import display.ProgressBar;
 import interfaces.codecompletion.domain.filehandling.iModelLibrary;
 import utils.StringUtils;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author filreh
@@ -100,12 +102,14 @@ public class ModelLibrary implements iModelLibrary {
      * @return
      */
     private NGram addModel(int N, ProgressBar pb) {
-        NGram model;
+        NGram model = null;
         pb.updateProgress(33);
         //1. check if it exists
         if(docHandler.getModelLocation(N).equals(DocHandler.MODEL_DOES_NOT_EXIST)) {
             //1.a does not exist: create a new one
             model = ModelCreator.createModel(N);
+
+            //multithreading stop
             pb.updateProgress(90);
 
         } else {
