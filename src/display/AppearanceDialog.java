@@ -1,16 +1,12 @@
 package display;
 
+import codecompletion.domain.filehandling.DocHandler;
 import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.multi.MultiLookAndFeel;
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
-import javax.swing.plaf.synth.SynthLookAndFeel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,17 +15,15 @@ public class AppearanceDialog {
     private final TextEditor textEditor;
     private JDialog dialog;
     private JLabel label;
-    private JSpinner spinner;
+    private JSpinner spinnerFontSize;
     private SpinnerNumberModel spinnerNumberModel;
-    private JButton button;
     private JPanel panel;
     private Listener listener;
-    JToggleButton toggleMode;
+    private JToggleButton toggleMode, toggleBold;
 
     public AppearanceDialog(TextEditor textEditor) {
         this.textEditor = textEditor;
-        darkMode();
-        //init();
+        init();
     }
 
 
@@ -39,16 +33,31 @@ public class AppearanceDialog {
 
         panel = new JPanel(new GridLayout(4,1));
 
+        label = new JLabel("Appearance Settings");
+        panel.add(label);
+
+        toggleBold = new JToggleButton("Toggle Bold");
+        toggleBold.setActionCommand("toggleBold");
+        toggleBold.addActionListener(listener);
+        panel.add(toggleBold);
+
+        spinnerNumberModel = new SpinnerNumberModel(22,5,50,1);
+        spinnerFontSize = new JSpinner(spinnerNumberModel);
+        spinnerFontSize.addChangeListener(listener);
+        panel.add(spinnerFontSize);
+
         toggleMode = new JToggleButton("Toggle Dark/Light Mode");
         toggleMode.setActionCommand("toggleMode");
         toggleMode.addActionListener(listener);
         panel.add(toggleMode);
 
-        spinnerNumberModel = new SpinnerNumberModel(22,5,50,1);
-        spinner = new JSpinner(spinnerNumberModel);
-        spinner.addChangeListener(listener);
-        panel.add(spinner);
-
+        dialog.add(panel);
+        dialog.setSize(new Dimension(420,340));
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dialog.setLocationRelativeTo(null);
+        Image img = new ImageIcon(DocHandler.getInstance().getLogoLocation()).getImage();
+        dialog.setIconImage(img);
+        dialog.setVisible(true);
     }
 
     private void changeFontSize(int size) {
@@ -84,12 +93,22 @@ public class AppearanceDialog {
 
     private class Listener implements ActionListener, ChangeListener {
         public void actionPerformed(ActionEvent e) {
-            //this triggers the dialog to dispose
-
-            if(toggleMode.isSelected()) {
-                darkMode();
-            } else {
-                lightMode();
+            if(e.getActionCommand().equals(toggleMode.getActionCommand())) {
+                if(toggleMode.isSelected()) {
+                    toggleMode.setText("Dark");
+                    darkMode();
+                } else {
+                    toggleMode.setText("Light");
+                    lightMode();
+                }
+            }else if(e.getActionCommand().equals(toggleBold.getActionCommand())) {
+                if(toggleBold.isSelected()) {
+                    toggleBold.setText("Plain");
+                    changeFontStyle(Font.PLAIN);
+                } else {
+                    toggleBold.setText("Bold");
+                    changeFontStyle(Font.BOLD);
+                }
             }
         }
 

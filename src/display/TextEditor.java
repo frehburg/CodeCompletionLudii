@@ -84,6 +84,7 @@ public class TextEditor {
         button = new JButton("Get Picklist");
         button.addActionListener(listener);
         textArea = new JTextArea(30,30);
+        MakeUndoable.makeUndoable(textArea);
         textArea.setFont(new Font(Font.MONOSPACED,Font.BOLD, 22));
         textArea.setText(gameDescription);
         scrollPane = new JScrollPane(textArea);

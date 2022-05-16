@@ -54,7 +54,7 @@ public class CodeCompletionDialog {
         this.dialog = new JDialog(frame,"Change Code Completion Model");
         this.dialog.setLayout(new BorderLayout());
         this.dialog.add(panel, BorderLayout.CENTER);
-        this.dialog.setSize(new Dimension(630,200));
+        this.dialog.setSize(new Dimension(630,230));
         this.dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.dialog.setLocationRelativeTo(null);
         Image img = new ImageIcon(DocHandler.getInstance().getLogoLocation()).getImage();
