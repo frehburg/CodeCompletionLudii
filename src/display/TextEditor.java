@@ -9,16 +9,19 @@ import utils.NGramUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 
 /**
  * Look and feel from https://search.maven.org/artifact/com.formdev/flatlaf/2.2/jar
  * https://www.formdev.com/flatlaf/#getting_started 5/16/22
+ *
+ * Picklist visualization from:
+ * https://stackoverflow.com/questions/10873748/how-to-show-autocomplete-as-i-type-in-jtextarea
+ * by user: https://stackoverflow.com/users/928711/guillaume-polet
+ * on 5/16/22
  */
 public class TextEditor {
     private static int N;
@@ -33,6 +36,7 @@ public class TextEditor {
     private JMenuBar menuBar;
     private TextLineNumber textLineNumber;
     private JFileChooser fileChooser;
+    private SuggestionPanel suggestion;
 
     private String gameName;
     private String fileLocation;
@@ -87,6 +91,7 @@ public class TextEditor {
         textArea = new JTextArea(30,30);
         MakeUndoable.makeUndoable(textArea);
         textArea.setFont(new Font(Font.MONOSPACED,Font.BOLD, 22));
+        textArea.addKeyListener(new SuggestionListener());
         textArea.setText(gameDescription);
         textLineNumber = new TextLineNumber(textArea);
         scrollPane = new JScrollPane(textArea);
@@ -149,6 +154,122 @@ public class TextEditor {
 
     }
 
+    protected void showSuggestionLater() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                showSuggestion();
+            }
+
+        });
+    }
+
+    protected void showSuggestion() {
+        hideSuggestion();
+        final int position = textArea.getCaretPosition();
+        System.out.println("Caret pos: "+ position);
+        Point location;
+        try {
+            location = textArea.modelToView(position).getLocation();
+        } catch (BadLocationException e2) {
+            e2.printStackTrace();
+            return;
+        }
+        String text = textArea.getText();
+        suggestion = new SuggestionPanel(textArea, position, location);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                textArea.requestFocusInWindow();
+            }
+        });
+    }
+
+    private void hideSuggestion() {
+        if (suggestion != null) {
+            suggestion.hide(suggestion);
+        }
+    }
+
+    public void openGameFromFile(String location) {
+        String gameDescription = GameFileHandler.readGame(location);
+        textArea.setText(gameDescription.substring(1,gameDescription.length()));
+    }
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    public JTextArea getTextArea() {
+        return textArea;
+    }
+
+    private class SuggestionListener implements KeyListener {
+
+        /**
+         * Invoked when a key has been typed.
+         * See the class description for {@link KeyEvent} for a definition of
+         * a key typed event.
+         *
+         * @param e
+         */
+        @Override
+        public void keyTyped(KeyEvent e) {
+            if (e.getKeyChar() == KeyEvent.VK_ENTER && suggestion != null) {
+                if (suggestion.insertSelection()) {
+                    e.consume();
+                    final int position = textArea.getCaretPosition();
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                textArea.getDocument().remove(position - 1, 1);
+                            } catch (BadLocationException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        /**
+         * Invoked when a key has been pressed.
+         * See the class description for {@link KeyEvent} for a definition of
+         * a key pressed event.
+         *
+         * @param e
+         */
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if(e.getKeyCode() == KeyEvent.VK_SPACE && e.isControlDown()) {
+                //CTRL + SPACE: show suggestion
+                showSuggestionLater();
+            }
+        }
+
+        /**
+         * Invoked when a key has been released.
+         * See the class description for {@link KeyEvent} for a definition of
+         * a key released event.
+         *
+         * @param e
+         */
+        @Override
+        public void keyReleased(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_DOWN && suggestion != null) {
+                suggestion.moveDown();
+            } else if (e.getKeyCode() == KeyEvent.VK_UP && suggestion != null) {
+                suggestion.moveUp();
+            } else if (Character.isLetterOrDigit(e.getKeyChar())) {
+                showSuggestionLater();
+            } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && suggestion != null) {
+                hideSuggestion();
+                showSuggestionLater();
+            }
+        }
+    }
+
     private class Listener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String s = e.getActionCommand();
@@ -171,7 +292,6 @@ public class TextEditor {
             } else if (s.equals("Load Game")) {
                 // open dialog to select storage location
                 askToSave(true);
-                System.out.println("Recevied button press");
             } else if (s.equals("Change appearance")) {
                 AppearanceDialog appearanceDialog = new AppearanceDialog(TextEditor.this);
             } else if (s.equals("Change Code Completion Model")) {
@@ -181,7 +301,6 @@ public class TextEditor {
             }
         }
         private void load() {
-            System.out.println("In method");
             fileChooser = new JFileChooser("res/");
             fileChooser.setDialogTitle("Choose a game to load in");
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -226,7 +345,6 @@ public class TextEditor {
         }
 
         public void askToSave(boolean load) {
-            System.out.println("In ask to save");
             if(textArea.getText().equals("")) {
                 if(load) {
                     load();
@@ -266,18 +384,5 @@ public class TextEditor {
             d.setLocationRelativeTo(null);
             d.setVisible(true);
         }
-    }
-
-    public void openGameFromFile(String location) {
-        String gameDescription = GameFileHandler.readGame(location);
-        textArea.setText(gameDescription.substring(1,gameDescription.length()));
-    }
-
-    public JFrame getFrame() {
-        return frame;
-    }
-
-    public JTextArea getTextArea() {
-        return textArea;
     }
 }
