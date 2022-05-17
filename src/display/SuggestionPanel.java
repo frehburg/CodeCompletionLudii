@@ -12,7 +12,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 public class SuggestionPanel {
-    private final JTextArea textarea;
+    private final JTextPane textarea;
     private final int position;
     private final Controller controller;
     private final JList<Ludeme> list;
@@ -21,7 +21,7 @@ public class SuggestionPanel {
     private int startBegunWord, endBegunWord;
     private boolean isBegunWord;
 
-    public SuggestionPanel(JTextArea textarea, int position, Point location, Controller controller) {
+    public SuggestionPanel(JTextPane textarea, int position, Point location, Controller controller) {
         this.controller = controller;
         this.textarea = textarea;
         this.position = position;

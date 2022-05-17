@@ -3,12 +3,14 @@ package display;
 import codecompletion.controller.Controller;
 import codecompletion.domain.filehandling.DocHandler;
 import codecompletion.domain.filehandling.GameFileHandler;
+import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import utils.NGramUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.*;
@@ -28,7 +30,7 @@ public class TextEditor {
     private final String gameDescription;
     private JFrame frame;
     private  JButton button;
-    private JTextArea textArea;
+    private JTextPane textArea;
     private Controller controller;
     private Listener listener;
     private JPanel panel;
@@ -40,21 +42,10 @@ public class TextEditor {
 
     private String gameName;
     private String fileLocation;
+    private boolean lightMode;
 
     //
-    private static FileFilter ludFilter = new FileFilter() {
-        public String getDescription() {
-            return "Ludii Game Files (*.lud)";
-        }
 
-        public boolean accept(File f) {
-            if (f.isDirectory()) {
-                return true;
-            } else {
-                return f.getName().toLowerCase().endsWith(".lud");
-            }
-        }
-    };
 
     // Singleton
     private static TextEditor textEditor;
@@ -73,24 +64,22 @@ public class TextEditor {
         gameName = "New Game";
         this.gameDescription = "";
         this.N = N;
+        lightMode = false;
         init();
     }
 
     private void init() {
-        try {
-            UIManager.setLookAndFeel( new FlatIntelliJLaf());
-        } catch( Exception ex ) {
-            System.err.println( "Failed to initialize LaF" );
-        }
+        setMode(lightMode);
         controller = new Controller(N);
         fileChooser = new JFileChooser("res/");
         frame = new JFrame("Editing: "+gameName);
         listener = new Listener();
         button = new JButton("Compile");
         button.addActionListener(listener);
-        textArea = new JTextArea(30,30);
+        textArea = new JTextPane();
         MakeUndoable.makeUndoable(textArea);
         textArea.setFont(new Font(Font.MONOSPACED,Font.BOLD, 22));
+        setColorScheme(lightMode);
         textArea.addKeyListener(new SuggestionListener());
         textArea.setText(gameDescription);
         textLineNumber = new TextLineNumber(textArea);
@@ -194,11 +183,53 @@ public class TextEditor {
         textArea.setText(gameDescription.substring(1,gameDescription.length()));
     }
 
+    private void setColorScheme(boolean lightMode) {
+        if(lightMode) {
+            if(textArea != null) {
+                ((AbstractDocument) textArea.getDocument()).setDocumentFilter(new ColorDocumentFilterDarkmode(textArea));
+            }
+        } else {
+            if(textArea != null) {
+                ((AbstractDocument) textArea.getDocument()).setDocumentFilter(new ColorDocumentFilterDarkmode(textArea));
+            }
+        }
+    }
+
+    private void setMode(boolean lightMode) {
+        this.lightMode = lightMode;
+        if(lightMode) {
+            lightMode();
+        } else {
+            darkMode();
+        }
+
+        if(frame != null) {
+            SwingUtilities.updateComponentTreeUI(frame);
+        }
+        setColorScheme(lightMode);
+    }
+    public void lightMode() {
+        try {
+            UIManager.setLookAndFeel( new FlatLightLaf());
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
+        }
+    }
+
+    public void darkMode() {
+        // Dark LAF
+        try {
+            UIManager.setLookAndFeel( new FlatDarculaLaf());
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
+        }
+    }
+
     public JFrame getFrame() {
         return frame;
     }
 
-    public JTextArea getTextArea() {
+    public JTextPane getTextArea() {
         return textArea;
     }
 
@@ -268,6 +299,9 @@ public class TextEditor {
             } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && suggestion != null) {
                 hideSuggestion();
                 showSuggestionLater();
+            }
+            if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                textArea.setText(textArea.getText().replaceAll("\r\n","\n"));
             }
         }
     }
@@ -388,4 +422,18 @@ public class TextEditor {
             d.setVisible(true);
         }
     }
+
+    private static FileFilter ludFilter = new FileFilter() {
+        public String getDescription() {
+            return "Ludii Game Files (*.lud)";
+        }
+
+        public boolean accept(File f) {
+            if (f.isDirectory()) {
+                return true;
+            } else {
+                return f.getName().toLowerCase().endsWith(".lud");
+            }
+        }
+    };
 }

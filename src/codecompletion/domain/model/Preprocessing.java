@@ -233,7 +233,7 @@ public class Preprocessing {
         } else {
             //piece the game description back together
             gameDescription = wordsList.get(0);
-            if(gameDescription.length() > 0) {
+            if(gameDescription.length() > 1) {
                 for (int i = 1; i < words.length; i++) {
                     gameDescription += " " + wordsList.get(i);
                 }

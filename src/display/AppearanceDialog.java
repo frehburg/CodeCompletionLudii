@@ -80,22 +80,11 @@ public class AppearanceDialog {
     }
 
     private void lightMode() {
-        try {
-            UIManager.setLookAndFeel( new FlatLightLaf());
-            SwingUtilities.updateComponentTreeUI(textEditor.getFrame());
-        } catch( Exception ex ) {
-            System.err.println( "Failed to initialize LaF" );
-        }
+        textEditor.lightMode();
     }
 
     private void darkMode() {
-        // Dark LAF
-        try {
-            UIManager.setLookAndFeel( new FlatDarculaLaf());
-            SwingUtilities.updateComponentTreeUI(textEditor.getFrame());
-        } catch( Exception ex ) {
-            System.err.println( "Failed to initialize LaF" );
-        }
+        textEditor.darkMode();
     }
 
     private class Listener implements ActionListener, ChangeListener {
