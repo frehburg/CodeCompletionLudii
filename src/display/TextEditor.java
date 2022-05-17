@@ -86,7 +86,7 @@ public class TextEditor {
         fileChooser = new JFileChooser("res/");
         frame = new JFrame("Editing: "+gameName);
         listener = new Listener();
-        button = new JButton("Get Picklist");
+        button = new JButton("Compile");
         button.addActionListener(listener);
         textArea = new JTextArea(30,30);
         MakeUndoable.makeUndoable(textArea);
@@ -277,7 +277,8 @@ public class TextEditor {
             String s = e.getActionCommand();
             if (s.equals(button.getActionCommand())) {
                 // set the text of the label to the text of the field
-                //TODO make this method show the picklist
+                //TODO make this method compile the current gamedescription
+                ProgressBar pb = new ProgressBar("Compiling...","Currently this feature is WIP.",100);
 
             } else if (s.equals("Open New Game")) {
                 askToSave(false);
