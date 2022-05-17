@@ -11,14 +11,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import static codecompletion.domain.model.Preprocessing.INSERT_REC_WILDCARD;
-
 public class SuggestionPanel {
     private final JTextArea textarea;
     private final int position;
     private final Controller controller;
-    private JList list;
-    private JPopupMenu popupMenu;
+    private final JList<Ludeme> list;
+    private final JPopupMenu popupMenu;
     private final int insertionPosition;
     private int startBegunWord, endBegunWord;
     private boolean isBegunWord;
@@ -46,15 +44,15 @@ public class SuggestionPanel {
         }
     }
 
-    private JList createSuggestionList(final int position) {
+    private JList<Ludeme> createSuggestionList(final int position) {
         // create the contextString
         String contextString = textarea.getText().substring(0,position);
         String begunWord = "";
-        //TODO change this to include the begunword
+        //TODO change this to include the begun word
         //at the moment, cannot process words that have already begun, therefore cut them out of the context string
         if(contextString.length() > 0) {
             char lastChar = contextString.charAt(position - 1);
-            //a new word was begun, if there was any sort of word seperator (space, tab, enter) before
+            //a new word was begun, if there was any sort of word separator (space, tab, enter) before
             if(lastChar != ' ' && lastChar != KeyEvent.VK_ENTER && lastChar != KeyEvent.VK_TAB) {
                 //cut of begun word
                 int lastSpacePosition = contextString.lastIndexOf(' ');
@@ -66,7 +64,7 @@ public class SuggestionPanel {
 
                 if(lastSpacePosition > 0) {
                     startBegunWord = lastSpacePosition + 1;
-                } else if(lastSpacePosition == 0){
+                } else {
                     startBegunWord = 0;
                 }
                 endBegunWord = position;
@@ -74,8 +72,8 @@ public class SuggestionPanel {
             }
         }
         List<Ludeme> picklist = controller.getPicklist(contextString, begunWord,10);
-        Object[] data = picklist.toArray(new Ludeme[0]);
-        JList list = new JList(data);
+        Ludeme[] data = picklist.toArray(new Ludeme[0]);
+        JList<Ludeme> list = new JList<>(data);
         list.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setSelectedIndex(0);
@@ -93,7 +91,7 @@ public class SuggestionPanel {
     public boolean insertSelection() {
         if (list.getSelectedValue() != null) {
             try {
-                final String selectedSuggestion = ((String) list.getSelectedValue().toString());
+                final String selectedSuggestion = list.getSelectedValue().toString();
                 if(!isBegunWord) {
                     textarea.getDocument().insertString(insertionPosition, selectedSuggestion + " ", null);
                 } else {
@@ -126,11 +124,6 @@ public class SuggestionPanel {
     private void selectIndex(int index) {
         final int position = textarea.getCaretPosition();
         list.setSelectedIndex(index);
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                textarea.setCaretPosition(position);
-            };
-        });
+        SwingUtilities.invokeLater(() -> textarea.setCaretPosition(position));
     }
 }

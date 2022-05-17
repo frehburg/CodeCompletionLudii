@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 
 public class AppearanceDialog {
     private final TextEditor textEditor;
+    private final Font font;
     private JDialog dialog;
     private JLabel label;
     private JSpinner spinnerFontSize;
@@ -23,6 +24,7 @@ public class AppearanceDialog {
 
     public AppearanceDialog(TextEditor textEditor) {
         this.textEditor = textEditor;
+        this.font = textEditor.getTextArea().getFont();
         init();
     }
 
@@ -37,6 +39,11 @@ public class AppearanceDialog {
         panel.add(label);
 
         toggleBold = new JToggleButton("Toggle Bold");
+        if(font.isBold()) {
+            toggleBold.setSelected(false);
+        } else {
+            toggleBold.setSelected(true);
+        }
         toggleBold.setActionCommand("toggleBold");
         toggleBold.addActionListener(listener);
         panel.add(toggleBold);
@@ -95,18 +102,18 @@ public class AppearanceDialog {
         public void actionPerformed(ActionEvent e) {
             if(e.getActionCommand().equals(toggleMode.getActionCommand())) {
                 if(toggleMode.isSelected()) {
-                    toggleMode.setText("Dark");
+                    toggleMode.setText("Make Light");
                     darkMode();
                 } else {
-                    toggleMode.setText("Light");
+                    toggleMode.setText("Make Dark");
                     lightMode();
                 }
             }else if(e.getActionCommand().equals(toggleBold.getActionCommand())) {
                 if(toggleBold.isSelected()) {
-                    toggleBold.setText("Plain");
+                    toggleBold.setText("Make Bold");
                     changeFontStyle(Font.PLAIN);
                 } else {
-                    toggleBold.setText("Bold");
+                    toggleBold.setText("Make Plain");
                     changeFontStyle(Font.BOLD);
                 }
             }
