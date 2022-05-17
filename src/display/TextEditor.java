@@ -214,24 +214,19 @@ public class TextEditor {
         @Override
         public void keyTyped(KeyEvent e) {
             if (e.getKeyChar() == KeyEvent.VK_ENTER && suggestion != null) {
+                System.out.println("LAST TYPED: "+e.getKeyChar() + " " + (e.getKeyChar() != ' '));
                 if (suggestion.insertSelection()) {
                     e.consume();
                     final int position = textArea.getCaretPosition();
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                textArea.getDocument().remove(position - 1, 1);
-                            } catch (BadLocationException e) {
-                                e.printStackTrace();
-                            }
+                    SwingUtilities.invokeLater(() -> {
+                        try {
+                            textArea.getDocument().remove(position - 1, 1);
+                        } catch (BadLocationException e1) {
+                            e1.printStackTrace();
                         }
                     });
                     suggestion = null;
                 }
-            } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                hideSuggestion();
-                suggestion = null;
             }
         }
 
@@ -247,6 +242,11 @@ public class TextEditor {
             if(e.getKeyCode() == KeyEvent.VK_SPACE && e.isControlDown()) {
                 //CTRL + SPACE: show suggestion
                 showSuggestionLater();
+            }
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                System.out.println("hello");
+                hideSuggestion();
+                suggestion = null;
             }
         }
 
