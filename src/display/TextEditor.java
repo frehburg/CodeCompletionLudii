@@ -167,7 +167,6 @@ public class TextEditor {
     protected void showSuggestion() {
         hideSuggestion();
         final int position = textArea.getCaretPosition();
-        System.out.println("Caret pos: "+ position);
         Point location;
         try {
             location = textArea.modelToView(position).getLocation();
@@ -228,7 +227,11 @@ public class TextEditor {
                             }
                         }
                     });
+                    suggestion = null;
                 }
+            } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                hideSuggestion();
+                suggestion = null;
             }
         }
 

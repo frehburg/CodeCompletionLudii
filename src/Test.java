@@ -25,7 +25,7 @@ public class Test {
 
     public static void main(String[] args) {
         Controller controller = new Controller(2);
-        List<Ludeme> picklist = controller.getPicklist("(game");
+        List<Ludeme> picklist = controller.getPicklist("(game \"Tic-Tac-Toe\"");
         picklist.forEach(l -> print(l));
         controller.close();
         //GZIPController.decompress("res/models/ngram_model_2.gz","res/models/ngram_model_2.csv");

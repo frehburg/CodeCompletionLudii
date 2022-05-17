@@ -1,5 +1,6 @@
 package utils;
 
+import codecompletion.Ludeme;
 import codecompletion.domain.model.Context;
 import codecompletion.domain.model.Instance;
 import codecompletion.domain.model.Preprocessing;
@@ -10,10 +11,6 @@ import java.util.*;
  * @author filreh
  */
 public class NGramUtils {
-    public final static boolean GENERIC_STRINGS = true;
-    public final static boolean GENERIC_OPTIONS = true;
-    public final static String STRING_WILDCARD = Preprocessing.STRING_WILDCARD;
-    public final static String OPTION_WILDCARD = Preprocessing.OPTION_WILDCARD;
     private final static boolean DEBUG = false;
 
     /**
@@ -24,48 +21,7 @@ public class NGramUtils {
      */
     public static List<List<String>> allSubstrings(String gameDescription, int N) {
         String[] words = gameDescription.split(" ");
-        //merge strings in code back together
-        List<String> wordsList = new ArrayList<>();
-        boolean foundStringInCode = false;
-        String stringInCode = "";
-        for(int i = 0; i < words.length; i++) {
-            String curWord = words[i];
-            if(foundStringInCode) {
-                if(curWord.endsWith("\"")) {
-                    //end of the string in code
-                    if(GENERIC_STRINGS) {
-                        wordsList.add(STRING_WILDCARD);
-                    } else {
-                        stringInCode += curWord;
-                        wordsList.add(stringInCode);
-                    }
-                    //resetting helper variables
-                    foundStringInCode = false;
-                    stringInCode = "";
-                } else {
-                    //middle of the string in code
-                    stringInCode += curWord + " ";
-                }
-            } else if(curWord.startsWith("\"") && !curWord.endsWith("\"")) {
-                //beginning of the string in code
-                foundStringInCode = true;
-                stringInCode += curWord + " ";
-            } else {
-                if(GENERIC_STRINGS && curWord.startsWith("\"") && curWord.endsWith("\"")) {
-                    //string in code
-                    wordsList.add(STRING_WILDCARD);
-                } else if(GENERIC_OPTIONS && (curWord.startsWith("<") || curWord.endsWith(">"))){
-                    wordsList.add(OPTION_WILDCARD);
-                } else if(StringUtils.equals(curWord,"*")) {
-                    //do nothing
-                } else {
-                    //just a normal word
-                    wordsList.add(curWord);
-                }
-            }
-        }
-        words = wordsList.toArray(new String[0]);
-        //end merging strings
+
         List<List<String>> substringsLengthN = new ArrayList<>();
         for(int i = 0; i <= words.length; i++) {
             int substringEnd = i + N;
@@ -220,5 +176,16 @@ public class NGramUtils {
         }
         if(DEBUG)System.out.println("MATCHING WORDS:"+sameTailLength);
         return sameTailLength;
+    }
+
+    public static List<Ludeme> filterByBegunWord(String begunWord, List<Ludeme> preliminaryPicklist) {
+        List<Ludeme> picklist = new ArrayList<>();
+        for(Ludeme ludeme : preliminaryPicklist) {
+            String keyword = ludeme.getKeyword();
+            if(keyword.startsWith(begunWord)) {
+                picklist.add(ludeme);
+            }
+        }
+        return picklist;
     }
 }

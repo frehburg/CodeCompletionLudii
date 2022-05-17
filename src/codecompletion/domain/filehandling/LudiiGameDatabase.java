@@ -143,7 +143,6 @@ public class LudiiGameDatabase implements iLudiiGameDatabase {
     @Override
     public String getDescription(String name) {
         int id = names.get(name);
-        System.out.println(locations.get(id));
         return getDescription(id);
     }
 

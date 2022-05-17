@@ -43,9 +43,20 @@ public class SuggestionPanel {
     private JList createSuggestionList(final int position) {
         // create the contextString
         String contextString = textarea.getText().substring(0,position);
-        System.out.println("CONTEXTSTRING"+contextString+"end");
-        List<Ludeme> picklist = controller.getPicklist(contextString);
-        System.out.println(contextString);
+        String begunWord = "";
+        //TODO change this to include the begunword
+        //at the moment, cannot process words that have already begun, therefore cut them out of the context string
+        char lastChar = textarea.getText().charAt(position - 1);
+        if(lastChar != ' ') {
+            //cut of begun word
+            int lastSpacePosition = textarea.getText().lastIndexOf(' ');
+            if(lastSpacePosition == -1) {
+                lastSpacePosition = 0;
+            }
+            contextString = textarea.getText().substring(0,lastSpacePosition);
+            begunWord = textarea.getText().substring(lastSpacePosition);
+        }
+        List<Ludeme> picklist = controller.getPicklist(contextString,10);
         Object[] data = picklist.toArray(new Ludeme[0]);
         JList list = new JList(data);
         list.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));

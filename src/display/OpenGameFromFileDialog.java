@@ -68,7 +68,6 @@ public class OpenGameFromFileDialog {
                 dialog.dispose();
                 return;
             }
-            System.out.println(location);
             textEditor.openGameFromFile(location);
             dialog.dispose();
         }

@@ -88,6 +88,44 @@ public class Controller implements iController {
     }
 
     /**
+     * 1. Convert the context string into a Context object
+     * 2. Get the matching Instance objects from the model
+     * 3. Filter out the invalid Instances using the Grammar
+     * 4. Use the BucketSort for the correct ordering
+     * 5. a. Preprocess begunWord
+     *    b. Filter out choices based on begunWord
+     *
+     * @param context
+     * @param begunWord
+     * @return
+     */
+    @Override
+    public List<Ludeme> getPicklist(String context, String begunWord) {
+        String cleanBegunWord = Preprocessing.preprocessBegunWord(begunWord);
+        List<Ludeme> preliminaryPicklist = getPicklist(context);
+
+        return null;
+    }
+
+    /**
+     * 1. Convert the context string into a Context object
+     * 2. Get the matching Instance objects from the model
+     * 3. Filter out the invalid Instances using the Grammar
+     * 4. Use the BucketSort for the correct ordering
+     * 5. Filter out choices based on begunWord
+     * 6. Optional: Shorten list to maxLength
+     *
+     * @param context
+     * @param begunWord
+     * @param maxLength
+     * @return
+     */
+    @Override
+    public List<Ludeme> getPicklist(String context, String begunWord, int maxLength) {
+        return null;
+    }
+
+    /**
      * This method switches out the current model, remember to update the N parameter
      *
      * @param model

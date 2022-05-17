@@ -77,7 +77,6 @@ public class ModelCreator {
                     setProgress(progress);
                     Thread.sleep(125);
                 }
-                System.out.println("DONE");
                 return model;
             }
 
@@ -106,7 +105,6 @@ public class ModelCreator {
         pb.close();
         //if the model is only created for validation purposes, it is not written to a file
         if(!validation) {
-            System.out.println("ModelCreator:WriteModel");
             ModelFilehandler.writeModel(model);
         }
         return model;

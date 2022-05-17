@@ -1,5 +1,10 @@
 package codecompletion.domain.model;
 
+import utils.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author filreh
  */
@@ -12,6 +17,8 @@ public class Preprocessing {
     public static final String STRING_WILDCARD = "STRING";
     public static final String OPTION_WILDCARD = "STRING";
     public static final String INSERT_REC_WILDCARD = "--REC--";
+    public final static boolean GENERIC_STRINGS = true;
+    public final static boolean GENERIC_OPTIONS = true;
 
     /**
      * This method applies all the necessary steps of preprocessing.
@@ -177,6 +184,65 @@ public class Preprocessing {
         gameDescription = gameDescription.replaceAll("True",BOOLEAN_WILDCARD);
         gameDescription = gameDescription.replaceAll("False",BOOLEAN_WILDCARD);
 
+        String[] words = gameDescription.split(" ");
+
+        //merge strings in code back together
+        List<String> wordsList = new ArrayList<>();
+        boolean foundStringInCode = false;
+        String stringInCode = "";
+        for(int i = 0; i < words.length; i++) {
+            String curWord = words[i];
+            if(foundStringInCode) {
+                if(curWord.endsWith("\"")) {
+                    //end of the string in code
+                    if(GENERIC_STRINGS) {
+                        wordsList.add(STRING_WILDCARD);
+                    } else {
+                        stringInCode += curWord;
+                        wordsList.add(stringInCode);
+                    }
+                    //resetting helper variables
+                    foundStringInCode = false;
+                    stringInCode = "";
+                } else {
+                    //middle of the string in code
+                    stringInCode += curWord + " ";
+                }
+            } else if(curWord.startsWith("\"") && !curWord.endsWith("\"")) {
+                //beginning of the string in code
+                foundStringInCode = true;
+                stringInCode += curWord + " ";
+            } else {
+                if(GENERIC_STRINGS && curWord.startsWith("\"") && curWord.endsWith("\"")) {
+                    //string in code
+                    wordsList.add(STRING_WILDCARD);
+                } else if(GENERIC_OPTIONS && (curWord.startsWith("<") || curWord.endsWith(">"))){
+                    wordsList.add(OPTION_WILDCARD);
+                } else if(StringUtils.equals(curWord,"*")) {
+                    //do nothing
+                } else {
+                    //just a normal word
+                    wordsList.add(curWord);
+                }
+            }
+        }
+        //end merging strings
+
+        if(wordsList.isEmpty()){
+            gameDescription = "";
+        } else {
+            //piece the game description back together
+            gameDescription = wordsList.get(0);
+            for(int i = 1; i < words.length; i++) {
+                gameDescription += " "+wordsList.get(i);
+            }
+        }
+
+
         return gameDescription;
+    }
+
+    public static String preprocessBegunWord(String begunWord) {
+        return begunWord;
     }
 }
