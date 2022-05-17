@@ -4,7 +4,6 @@ import codecompletion.controller.Controller;
 import codecompletion.domain.filehandling.DocHandler;
 import codecompletion.domain.filehandling.GameFileHandler;
 import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import utils.NGramUtils;
 
@@ -64,7 +63,7 @@ public class TextEditor {
         gameName = "New Game";
         this.gameDescription = "";
         this.N = N;
-        lightMode = false;
+        lightMode = true;
         init();
     }
 
@@ -186,16 +185,18 @@ public class TextEditor {
     private void setColorScheme(boolean lightMode) {
         if(lightMode) {
             if(textArea != null) {
-                ((AbstractDocument) textArea.getDocument()).setDocumentFilter(new ColorDocumentFilterDarkmode(textArea));
+                textArea.setBackground(Color.decode("#ffffff"));
+                ((AbstractDocument) textArea.getDocument()).setDocumentFilter(new ColorDocumentFilter(textArea, true));
             }
-        } else {
+        } else {//dark mode
             if(textArea != null) {
-                ((AbstractDocument) textArea.getDocument()).setDocumentFilter(new ColorDocumentFilterDarkmode(textArea));
+                textArea.setBackground(Color.decode("#2b2b2b"));
+                ((AbstractDocument) textArea.getDocument()).setDocumentFilter(new ColorDocumentFilter(textArea, false));
             }
         }
     }
 
-    private void setMode(boolean lightMode) {
+    public void setMode(boolean lightMode) {
         this.lightMode = lightMode;
         if(lightMode) {
             lightMode();
@@ -208,15 +209,15 @@ public class TextEditor {
         }
         setColorScheme(lightMode);
     }
-    public void lightMode() {
+    private void lightMode() {
         try {
-            UIManager.setLookAndFeel( new FlatLightLaf());
+            UIManager.setLookAndFeel(new FlatLightLaf());
         } catch( Exception ex ) {
             System.err.println( "Failed to initialize LaF" );
         }
     }
 
-    public void darkMode() {
+    private void darkMode() {
         // Dark LAF
         try {
             UIManager.setLookAndFeel( new FlatDarculaLaf());

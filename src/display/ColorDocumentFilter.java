@@ -12,10 +12,11 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class ColorDocumentFilterDarkmode extends DocumentFilter
+public final class ColorDocumentFilter extends DocumentFilter
 {
     private final JTextPane textPane;
     private final StyledDocument styledDocument;
+    private final boolean lightMode;
 
     private StyleContext styleContext;
     private AttributeSet ludemeAttributeSet,parenthesisAttributeSet, attributeAttributeSet, defaultAttributeSet,
@@ -25,7 +26,8 @@ public final class ColorDocumentFilterDarkmode extends DocumentFilter
             bracesPattern, hashPattern, optionPattern,commentPattern;
 
 
-    public ColorDocumentFilterDarkmode(JTextPane textPane) {
+    public ColorDocumentFilter(JTextPane textPane, boolean lightMode) {
+        this.lightMode = lightMode;
         this.textPane = textPane;
         this.styledDocument= textPane.getStyledDocument();
         init();
@@ -47,7 +49,8 @@ public final class ColorDocumentFilterDarkmode extends DocumentFilter
         optionAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#507874"));
         commentAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#7F7F7A"));
 
-        defaultAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.WHITE);
+        defaultAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#575757"));
+
 
         // Use a regular expression to find the words you are looking for
         parenthesisPattern = Pattern.compile("\\(|\\)");
@@ -125,7 +128,7 @@ public final class ColorDocumentFilterDarkmode extends DocumentFilter
         styledDocument.setCharacterAttributes(0, textPane.getText().length(), defaultAttributeSet, true);
 
         List<Pattern> patterns = Arrays.asList(new Pattern[]{ludemePattern,parenthesisPattern,attributePattern,
-                numberPattern,stringPattern,mathPattern,bracesPattern,hashPattern,optionPattern, commentPattern});
+                numberPattern,stringPattern,bracesPattern,hashPattern,optionPattern, commentPattern,mathPattern});
         List<AttributeSet> attributeSets = Arrays.asList(new AttributeSet[]{ludemeAttributeSet,parenthesisAttributeSet,
                 attributeAttributeSet,numberAttributeSet,stringAttributeSet,mathAttributeSet,bracesAttributeSet,
                 hashAttributeSet,optionAttributeSet, commentAttributeSet});

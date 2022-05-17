@@ -80,11 +80,11 @@ public class AppearanceDialog {
     }
 
     private void lightMode() {
-        textEditor.lightMode();
+        textEditor.setMode(true);
     }
 
     private void darkMode() {
-        textEditor.darkMode();
+        textEditor.setMode(false);
     }
 
     private class Listener implements ActionListener, ChangeListener {

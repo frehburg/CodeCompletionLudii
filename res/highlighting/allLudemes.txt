@@ -207,3 +207,5 @@ where
 while
 who
 xor
+define
+metadata
