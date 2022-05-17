@@ -243,6 +243,9 @@ public class Preprocessing {
     }
 
     public static String preprocessBegunWord(String begunWord) {
+        // Watch out for numbers: only contains numbers
+        //Watch out for strings: begins with '"'
+        //Watch out for
         return begunWord;
     }
 }

@@ -41,6 +41,8 @@ public class Controller implements iController {
     }
 
     /**
+     * Code Completion method for Visual Editor
+     *
      * 1. Convert the context string into a Context object
      * 2. Get the matching Instance objects from the model
      * 3. Filter out the invalid Instances using the Grammar
@@ -68,6 +70,8 @@ public class Controller implements iController {
     }
 
     /**
+     * Code Completion method for Visual Editor
+     *
      * 1. Convert the context string into a Context object
      * 2. Get the matching Instance objects from the model
      * 3. Filter out the invalid Instances using the Grammar
@@ -88,6 +92,8 @@ public class Controller implements iController {
     }
 
     /**
+     * Code Completion method for Text Editor
+     *
      * 1. Convert the context string into a Context object
      * 2. Get the matching Instance objects from the model
      * 3. Filter out the invalid Instances using the Grammar
@@ -103,11 +109,13 @@ public class Controller implements iController {
     public List<Ludeme> getPicklist(String context, String begunWord) {
         String cleanBegunWord = Preprocessing.preprocessBegunWord(begunWord);
         List<Ludeme> preliminaryPicklist = getPicklist(context);
-
-        return null;
+        List<Ludeme> picklist = NGramUtils.filterByBegunWord(begunWord,preliminaryPicklist);
+        return picklist;
     }
 
     /**
+     * Code Completion method for Text Editor
+     *
      * 1. Convert the context string into a Context object
      * 2. Get the matching Instance objects from the model
      * 3. Filter out the invalid Instances using the Grammar
@@ -122,7 +130,11 @@ public class Controller implements iController {
      */
     @Override
     public List<Ludeme> getPicklist(String context, String begunWord, int maxLength) {
-        return null;
+        List<Ludeme> picklist = getPicklist(context, begunWord);
+        if(picklist.size() >= maxLength) {
+            picklist = picklist.subList(0,maxLength);
+        }
+        return picklist;
     }
 
     /**

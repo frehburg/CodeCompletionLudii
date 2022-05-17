@@ -1,8 +1,6 @@
 package codecompletion.domain.model;
 
 import interfaces.codecompletion.domain.model.iNGram;
-import utils.NGramUtils;
-import utils.Pair;
 import utils.StringUtils;
 
 import java.util.*;
@@ -49,7 +47,7 @@ public class NGram implements iNGram {
      */
     @Override
     public void addInstanceToModel(Instance instance) {
-        if(!specifyNumber(instance)) {
+        if(!specifyNumberAndBoolean(instance)) {
             List<Instance> recs = dictionary.getOrDefault(instance.getKey(), new ArrayList<>());
             boolean foundEqual = false;
             for (Instance i : recs) {
@@ -74,10 +72,12 @@ public class NGram implements iNGram {
      * FLOAT and INT wildcards.
      * @param instance
      */
-    private boolean specifyNumber(Instance instance) {
-        boolean containsNumber = false;
+    private boolean specifyNumberAndBoolean(Instance instance) {
+        boolean containsNumber = false, containsBoolean = false;
         String[] wildcards = new String[] {INTEGER_WILDCARD, FLOAT_WILDCARD};
+        String[] booleanLudemes = new String[] {"True","False"};
         List<String> words = instance.getWords();
+        //to replace the generic number wildcard with float and int wildcards
         for(String wildcard : wildcards) {
             if(instance.getWords().contains(NUMBER_WILDCARD)) {
                 containsNumber = true;
@@ -93,7 +93,24 @@ public class NGram implements iNGram {
                 addInstanceToModel(newInstance);
             }
         }
-        return containsNumber;
+
+        // to replace the generic boolean wildcard
+        for(String booleanValue : booleanLudemes) {
+            if(instance.getWords().contains(BOOLEAN_WILDCARD)) {
+                containsBoolean = true;
+                List<String> newWords = new ArrayList<>();
+                for(String word : words) {
+                    if(StringUtils.equals(word, BOOLEAN_WILDCARD)) {
+                        newWords.add(booleanValue);
+                    } else {
+                        newWords.add(word);
+                    }
+                }
+                Instance newInstance = new Instance(newWords, instance.getMultiplicity());
+                addInstanceToModel(newInstance);
+            }
+        }
+        return (containsNumber || containsBoolean);
     }
 
     /**

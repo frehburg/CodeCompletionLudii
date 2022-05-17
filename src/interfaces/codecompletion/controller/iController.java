@@ -11,6 +11,8 @@ import java.util.List;
 public interface iController {
 
     /**
+     * Code Completion method for Visual Editor
+     *
      * 1. Convert the context string into a Context object
      * 2. Get the matching Instance objects from the model
      * 3. Filter out the invalid Instances using the Grammar
@@ -20,6 +22,8 @@ public interface iController {
      */
     List<Ludeme> getPicklist(String context);
     /**
+     * Code Completion method for Visual Editor
+     *
      * 1. Convert the context string into a Context object
      * 2. Get the matching Instance objects from the model
      * 3. Filter out the invalid Instances using the Grammar
@@ -32,6 +36,8 @@ public interface iController {
     List<Ludeme> getPicklist(String context, int maxLength);
 
     /**
+     * Code Completion method for Text Editor
+     *
      * 1. Convert the context string into a Context object
      * 2. Get the matching Instance objects from the model
      * 3. Filter out the invalid Instances using the Grammar
@@ -44,6 +50,8 @@ public interface iController {
     List<Ludeme> getPicklist(String context, String begunWord);
 
     /**
+     * Code Completion method for Text Editor
+     *
      * 1. Convert the context string into a Context object
      * 2. Get the matching Instance objects from the model
      * 3. Filter out the invalid Instances using the Grammar
