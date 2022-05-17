@@ -108,8 +108,9 @@ public class Controller implements iController {
     @Override
     public List<Ludeme> getPicklist(String context, String begunWord) {
         String cleanBegunWord = Preprocessing.preprocessBegunWord(begunWord);
+        System.out.println("CONTROLLER: context -> "+context);
         List<Ludeme> preliminaryPicklist = getPicklist(context);
-        List<Ludeme> picklist = NGramUtils.filterByBegunWord(begunWord,preliminaryPicklist);
+        List<Ludeme> picklist = NGramUtils.filterByBegunWord(cleanBegunWord,preliminaryPicklist);
         return picklist;
     }
 

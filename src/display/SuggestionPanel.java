@@ -6,6 +6,7 @@ import codecompletion.controller.Controller;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -53,8 +54,8 @@ public class SuggestionPanel {
         //at the moment, cannot process words that have already begun, therefore cut them out of the context string
         if(contextString.length() > 0) {
             char lastChar = contextString.charAt(position - 1);
-            //a new word was begun
-            if(lastChar != ' ') {
+            //a new word was begun, if there was any sort of word seperator (space, tab, enter) before
+            if(lastChar != ' ' && lastChar != KeyEvent.VK_ENTER && lastChar != KeyEvent.VK_TAB) {
                 //cut of begun word
                 int lastSpacePosition = contextString.lastIndexOf(' ');
                 if(lastSpacePosition == -1) {
@@ -63,7 +64,11 @@ public class SuggestionPanel {
                 begunWord = contextString.substring(lastSpacePosition);
                 contextString = textarea.getText().substring(0,lastSpacePosition);
 
-                startBegunWord = lastSpacePosition;
+                if(lastSpacePosition > 0) {
+                    startBegunWord = lastSpacePosition + 1;
+                } else if(lastSpacePosition == 0){
+                    startBegunWord = 0;
+                }
                 endBegunWord = position;
                 isBegunWord = true;
             }
@@ -95,6 +100,9 @@ public class SuggestionPanel {
                     int len = endBegunWord - startBegunWord;
                     textarea.getDocument().remove(startBegunWord,len);
                     textarea.getDocument().insertString(startBegunWord, selectedSuggestion + " ", null);
+                    startBegunWord = -1;
+                    endBegunWord = -1;
+                    isBegunWord = false;
                 }
                 hide(this);
                 return true;
