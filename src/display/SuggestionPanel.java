@@ -19,12 +19,17 @@ public class SuggestionPanel {
     private JList list;
     private JPopupMenu popupMenu;
     private final int insertionPosition;
+    private int startBegunWord, endBegunWord;
+    private boolean isBegunWord;
 
     public SuggestionPanel(JTextArea textarea, int position, Point location, Controller controller) {
         this.controller = controller;
         this.textarea = textarea;
         this.position = position;
         this.insertionPosition = position;
+        startBegunWord = -1;
+        endBegunWord = -1;
+        isBegunWord = false;
         popupMenu = new JPopupMenu();
         popupMenu.removeAll();
         popupMenu.setOpaque(false);
@@ -46,17 +51,24 @@ public class SuggestionPanel {
         String begunWord = "";
         //TODO change this to include the begunword
         //at the moment, cannot process words that have already begun, therefore cut them out of the context string
-        char lastChar = textarea.getText().charAt(position - 1);
-        if(lastChar != ' ') {
-            //cut of begun word
-            int lastSpacePosition = textarea.getText().lastIndexOf(' ');
-            if(lastSpacePosition == -1) {
-                lastSpacePosition = 0;
+        if(contextString.length() > 0) {
+            char lastChar = contextString.charAt(position - 1);
+            //a new word was begun
+            if(lastChar != ' ') {
+                //cut of begun word
+                int lastSpacePosition = contextString.lastIndexOf(' ');
+                if(lastSpacePosition == -1) {
+                    lastSpacePosition = 0;
+                }
+                begunWord = contextString.substring(lastSpacePosition);
+                contextString = textarea.getText().substring(0,lastSpacePosition);
+
+                startBegunWord = lastSpacePosition;
+                endBegunWord = position;
+                isBegunWord = true;
             }
-            contextString = textarea.getText().substring(0,lastSpacePosition);
-            begunWord = textarea.getText().substring(lastSpacePosition);
         }
-        List<Ludeme> picklist = controller.getPicklist(contextString,10);
+        List<Ludeme> picklist = controller.getPicklist(contextString, begunWord,10);
         Object[] data = picklist.toArray(new Ludeme[0]);
         JList list = new JList(data);
         list.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
@@ -77,7 +89,13 @@ public class SuggestionPanel {
         if (list.getSelectedValue() != null) {
             try {
                 final String selectedSuggestion = ((String) list.getSelectedValue().toString());
-                textarea.getDocument().insertString(insertionPosition, selectedSuggestion + " ", null);
+                if(!isBegunWord) {
+                    textarea.getDocument().insertString(insertionPosition, selectedSuggestion + " ", null);
+                } else {
+                    int len = endBegunWord - startBegunWord;
+                    textarea.getDocument().remove(startBegunWord,len);
+                    textarea.getDocument().insertString(startBegunWord, selectedSuggestion + " ", null);
+                }
                 hide(this);
                 return true;
             } catch (BadLocationException e1) {

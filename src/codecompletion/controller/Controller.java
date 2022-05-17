@@ -130,7 +130,12 @@ public class Controller implements iController {
      */
     @Override
     public List<Ludeme> getPicklist(String context, String begunWord, int maxLength) {
-        List<Ludeme> picklist = getPicklist(context, begunWord);
+        List<Ludeme> picklist;
+        if(StringUtils.equals(begunWord,"")) {
+            picklist = getPicklist(context,maxLength);
+        } else {
+            picklist = getPicklist(context, begunWord);
+        }
         if(picklist.size() >= maxLength) {
             picklist = picklist.subList(0,maxLength);
         }

@@ -73,6 +73,8 @@ public class NGram implements iNGram {
      * @param instance
      */
     private boolean specifyNumberAndBoolean(Instance instance) {
+        //TODO Move this method into the getPicklist, then it only gets applied to the requested ludemes
+        //and keeps the filesize down
         boolean containsNumber = false, containsBoolean = false;
         String[] wildcards = new String[] {INTEGER_WILDCARD, FLOAT_WILDCARD};
         String[] booleanLudemes = new String[] {"True","False"};

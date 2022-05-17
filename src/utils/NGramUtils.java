@@ -182,7 +182,7 @@ public class NGramUtils {
         List<Ludeme> picklist = new ArrayList<>();
         for(Ludeme ludeme : preliminaryPicklist) {
             String keyword = ludeme.getKeyword();
-            if(keyword.startsWith(begunWord)) {
+            if(keyword.startsWith(begunWord) || StringUtils.equals(keyword,begunWord)) {
                 picklist.add(ludeme);
             }
         }

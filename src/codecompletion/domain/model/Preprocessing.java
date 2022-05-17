@@ -243,9 +243,29 @@ public class Preprocessing {
     }
 
     public static String preprocessBegunWord(String begunWord) {
+        String cleanBegunWord = "";
         // Watch out for numbers: only contains numbers
+        try {
+            double test = Double.parseDouble(begunWord);
+            //need to find out whether it is a float or an int
+            if(begunWord.contains(".")) {
+                cleanBegunWord = FLOAT_WILDCARD;
+            } else {
+                cleanBegunWord = INTEGER_WILDCARD;
+            }
+        } catch (NumberFormatException e) {
+            //part of the logic: if the begunWord does not parse, then it is not a number
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //Watch out for strings: begins with '"'
-        //Watch out for
-        return begunWord;
+        if(begunWord.startsWith("\"")) {
+            begunWord = STRING_WILDCARD;
+        }
+        //Watch out for options: begins with '<'
+        if(begunWord.startsWith("<")) {
+            begunWord = OPTION_WILDCARD;
+        }
+        return cleanBegunWord;
     }
 }
