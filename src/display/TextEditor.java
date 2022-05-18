@@ -392,7 +392,7 @@ public class TextEditor {
                         d.dispose();
                     }
                 };
-                timer.schedule(task, 1000);
+                timer.schedule(task, 1250);
                 d.add(okButton);
                 d.setLocationRelativeTo(null);
                 d.setSize(500,180);
