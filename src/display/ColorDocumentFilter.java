@@ -36,6 +36,7 @@ public final class ColorDocumentFilter extends DocumentFilter
         this.textPane = textEditor.getTextArea();
         this.styledDocument= textPane.getStyledDocument();
         init();
+        updateTextStyles();
     }
 
     /**

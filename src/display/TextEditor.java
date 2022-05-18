@@ -191,6 +191,7 @@ public class TextEditor {
             }
             //automatically handles the color scheme
             ((AbstractDocument) textArea.getDocument()).setDocumentFilter(new ColorDocumentFilter(this));
+            textArea.setCaretPosition(0);
         }
     }
 
@@ -277,6 +278,10 @@ public class TextEditor {
                 //CTRL + SPACE: show suggestion
                 showSuggestionLater();
             }
+            if(e.getKeyCode() == KeyEvent.VK_S && e.isControlDown()) {
+                //CTRL + S: save
+                listener.save();
+            }
             if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 System.out.println("hello");
                 hideSuggestion();
@@ -355,6 +360,7 @@ public class TextEditor {
             }
             String gameDescription = GameFileHandler.readGame(fileLocation);
             textArea.setText(gameDescription.substring(1,gameDescription.length()));
+            textArea.setCaretPosition(0);
         }
 
         private void save() {
@@ -369,6 +375,20 @@ public class TextEditor {
                 } else {
                     GameFileHandler.writeGame(gameDescription,fileLocation+"\\"+gameName+".lud");
                 }
+                JDialog d = new JDialog(frame,"Saved Game Successfully");
+                JButton okButton = new JButton("Okay");
+                okButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        d.dispose();
+                    }
+                });
+                d.add(okButton);
+                d.setLocationRelativeTo(null);
+                d.setSize(500,180);
+                d.setResizable(false);
+                d.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                d.setVisible(true);
             }
         }
 
