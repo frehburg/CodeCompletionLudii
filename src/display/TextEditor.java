@@ -11,6 +11,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -383,6 +385,14 @@ public class TextEditor {
                         d.dispose();
                     }
                 });
+                Timer timer = new Timer();
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        d.dispose();
+                    }
+                };
+                timer.schedule(task, 1000);
                 d.add(okButton);
                 d.setLocationRelativeTo(null);
                 d.setSize(500,180);
