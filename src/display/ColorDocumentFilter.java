@@ -16,19 +16,24 @@ public final class ColorDocumentFilter extends DocumentFilter
 {
     private final JTextPane textPane;
     private final StyledDocument styledDocument;
-    private final boolean lightMode;
+    private final TextEditor textEditor;
 
     private StyleContext styleContext;
-    private AttributeSet ludemeAttributeSet,parenthesisAttributeSet, attributeAttributeSet, defaultAttributeSet,
-            numberAttributeSet, stringAttributeSet, mathAttributeSet, bracesAttributeSet, hashAttributeSet,
-            optionAttributeSet,commentAttributeSet;
+    private AttributeSet ludemeAttributeSetDark, parenthesisAttributeSetDark, attributeAttributeSetDark, defaultAttributeSetDark,
+            numberAttributeSetDark, stringAttributeSetDark, mathAttributeSetDark, bracesAttributeSetDark, hashAttributeSetDark,
+            optionAttributeSetDark, commentAttributeSetDark;
+
+    private AttributeSet ludemeAttributeSetLight, parenthesisAttributeSetLight, attributeAttributeSetLight, defaultAttributeSetLight,
+            numberAttributeSetLight, stringAttributeSetLight, mathAttributeSetLight, bracesAttributeSetLight, hashAttributeSetLight,
+            optionAttributeSetLight, commentAttributeSetLight;
+
     private Pattern ludemePattern, parenthesisPattern, attributePattern, numberPattern, stringPattern, mathPattern,
             bracesPattern, hashPattern, optionPattern,commentPattern;
 
 
-    public ColorDocumentFilter(JTextPane textPane, boolean lightMode) {
-        this.lightMode = lightMode;
-        this.textPane = textPane;
+    public ColorDocumentFilter(TextEditor textEditor) {
+        this.textEditor = textEditor;
+        this.textPane = textEditor.getTextArea();
         this.styledDocument= textPane.getStyledDocument();
         init();
     }
@@ -38,19 +43,36 @@ public final class ColorDocumentFilter extends DocumentFilter
      */
     private void init() {
         styleContext = StyleContext.getDefaultStyleContext();
-        ludemeAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#CC7832"));
-        parenthesisAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#CC7832"));
-        attributeAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#9876AA"));
-        numberAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#6897BB"));
-        stringAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#6a8759"));
-        mathAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#BBB529"));
-        bracesAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#BBB529"));
-        hashAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#707D95"));
-        optionAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#507874"));
-        commentAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#7F7F7A"));
 
-        defaultAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#575757"));
+        //START LIGHTMODE
+        ludemeAttributeSetLight = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#7C227A"));
+        parenthesisAttributeSetLight = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#392795"));
+        attributeAttributeSetLight = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#7F3F3E"));
+        numberAttributeSetLight = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#455ED0"));
+        stringAttributeSetLight = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#4F7E61"));
+        mathAttributeSetLight = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
+        bracesAttributeSetLight = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
+        hashAttributeSetLight = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
+        optionAttributeSetLight = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#E70000"));
+        commentAttributeSetLight= styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
 
+        defaultAttributeSetLight = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#575757"));
+        //END LIGHTMODE
+
+        //START DARKMODE
+        ludemeAttributeSetDark = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#CC7832"));
+        parenthesisAttributeSetDark = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#CC7832"));
+        attributeAttributeSetDark = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#9876AA"));
+        numberAttributeSetDark = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#6897BB"));
+        stringAttributeSetDark = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#6a8759"));
+        mathAttributeSetDark = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#BBB529"));
+        bracesAttributeSetDark = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#BBB529"));
+        hashAttributeSetDark = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#707D95"));
+        optionAttributeSetDark = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#507874"));
+        commentAttributeSetDark = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.decode("#7F7F7A"));
+
+        defaultAttributeSetDark = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.WHITE);
+        //END DARKMODE
 
         // Use a regular expression to find the words you are looking for
         parenthesisPattern = Pattern.compile("\\(|\\)");
@@ -125,17 +147,32 @@ public final class ColorDocumentFilter extends DocumentFilter
     private void updateTextStyles()
     {
         // Clear existing styles
+        AttributeSet defaultAttributeSet;
+        if(textEditor.isLightMode()) {
+            defaultAttributeSet = defaultAttributeSetLight;
+        } else {
+            defaultAttributeSet = defaultAttributeSetDark;
+        }
         styledDocument.setCharacterAttributes(0, textPane.getText().length(), defaultAttributeSet, true);
 
         List<Pattern> patterns = Arrays.asList(new Pattern[]{ludemePattern,parenthesisPattern,attributePattern,
                 numberPattern,stringPattern,bracesPattern,hashPattern,optionPattern, commentPattern,mathPattern});
-        List<AttributeSet> attributeSets = Arrays.asList(new AttributeSet[]{ludemeAttributeSet,parenthesisAttributeSet,
-                attributeAttributeSet,numberAttributeSet,stringAttributeSet,mathAttributeSet,bracesAttributeSet,
-                hashAttributeSet,optionAttributeSet, commentAttributeSet});
+        List<AttributeSet> attributeSetsDark = Arrays.asList(new AttributeSet[]{ludemeAttributeSetDark, parenthesisAttributeSetDark,
+                attributeAttributeSetDark, numberAttributeSetDark, stringAttributeSetDark, mathAttributeSetDark, bracesAttributeSetDark,
+                hashAttributeSetDark, optionAttributeSetDark, commentAttributeSetDark});
+        List<AttributeSet> attributeSetsLight = Arrays.asList(new AttributeSet[]{ludemeAttributeSetLight, parenthesisAttributeSetLight,
+                attributeAttributeSetLight, numberAttributeSetLight, stringAttributeSetLight, mathAttributeSetLight, bracesAttributeSetLight,
+                hashAttributeSetLight, optionAttributeSetLight, commentAttributeSetLight});
         // Look for tokens and highlight them
         for(int i = 0; i < patterns.size(); i++) {
             Pattern pattern = patterns.get(i);
-            AttributeSet attributeSet = attributeSets.get(i);
+            AttributeSet attributeSet;
+            if(textEditor.isLightMode()) {
+                 attributeSet = attributeSetsLight.get(i);
+            } else {
+                //darkmode
+                attributeSet = attributeSetsDark.get(i);
+            }
             Matcher matcher = pattern.matcher(textPane.getText());
             while (matcher.find()) {
                 // Change the color of recognized tokens

@@ -183,16 +183,14 @@ public class TextEditor {
     }
 
     private void setColorScheme(boolean lightMode) {
-        if(lightMode) {
-            if(textArea != null) {
+        if(textArea != null) {
+            if (lightMode) {
                 textArea.setBackground(Color.decode("#ffffff"));
-                ((AbstractDocument) textArea.getDocument()).setDocumentFilter(new ColorDocumentFilter(textArea, true));
-            }
-        } else {//dark mode
-            if(textArea != null) {
+            } else {//dark mode
                 textArea.setBackground(Color.decode("#2b2b2b"));
-                ((AbstractDocument) textArea.getDocument()).setDocumentFilter(new ColorDocumentFilter(textArea, false));
             }
+            //automatically handles the color scheme
+            ((AbstractDocument) textArea.getDocument()).setDocumentFilter(new ColorDocumentFilter(this));
         }
     }
 
@@ -232,6 +230,10 @@ public class TextEditor {
 
     public JTextPane getTextArea() {
         return textArea;
+    }
+
+    public boolean isLightMode() {
+        return lightMode;
     }
 
     private class SuggestionListener implements KeyListener {
