@@ -1,5 +1,5 @@
 (game "FilipsGame"
 	(players 2)
-	(equipment {1,2,3}
+	(equipment {1,3}
 	)
 )
