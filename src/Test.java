@@ -11,6 +11,7 @@ import utils.BucketSort;
 import utils.GZIPController;
 import utils.Instance2Ludeme;
 import utils.Pair;
+import validation.controller.ValidationController;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,11 +25,8 @@ public class Test {
     public static final String VALIDATION = "res/crossvalidation/validationIDs.txt";
 
     public static void main(String[] args) {
-        Controller controller = new Controller(2);
-        List<Ludeme> picklist = controller.getPicklist("(game \"Tic-Tac-Toe\"");
-        picklist.forEach(l -> print(l));
-        controller.close();
-        //GZIPController.decompress("res/models/ngram_model_2.gz","res/models/ngram_model_2.csv");
+        ValidationController controller = new ValidationController();
+        controller.validate(2);
     }
 
     public static void getMultipleModels(int maxN) {

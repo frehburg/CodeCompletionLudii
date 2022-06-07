@@ -23,9 +23,23 @@ public class Controller implements iController {
     private NGram model;
     private DocHandler docHandler;
 
+    /**
+     * Standard constructor
+     * @param N
+     */
     public Controller(int N) {
         this.N = N;
         initModel();
+    }
+
+    /**
+     * This constructor is only for validation
+     * @param model
+     */
+    public Controller(NGram model) {
+        this.N = model.getN();
+        initModel();
+        this.model = model;
     }
 
     /**
