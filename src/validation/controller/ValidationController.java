@@ -12,9 +12,9 @@ import java.util.List;
 
 public class ValidationController {
 
-    private static final double TEST_PROBABILITY = 0.66;
-    private static final int TEST_REPLICATIONS = 10;//1000;
-    private static final int TEST_ITERATIONS = 10;//100;
+    private static final double TEST_PROPORTION = 0.66;
+    private static final int REPLICATIONS = 31;
+    private static final int ITERATIONS = 1000;
 
     public void validate(int minN, int maxN) {
         for(int N = minN; N <= maxN; N++) {
@@ -31,9 +31,9 @@ public class ValidationController {
         int amtGames = db.getAmountGames();
 
         // replicate this experiment
-        for(int r = 0; r < TEST_REPLICATIONS; r++) {
+        for(int r = 0; r < REPLICATIONS; r++) {
             // select games for the split
-            CrossValidation crossValidation = new CrossValidation(amtGames,TEST_PROBABILITY);
+            CrossValidation crossValidation = new CrossValidation(amtGames, TEST_PROPORTION);
             List<Integer> testIDs = crossValidation.getTestIDs();
             List<Integer> validationIDs = crossValidation.getValidationIDs();
 
@@ -44,16 +44,16 @@ public class ValidationController {
             //times
             long currentTime;
 
-            long[] delays = new long[TEST_ITERATIONS];
+            long[] delays = new long[ITERATIONS];
 
             //precision
-            byte[] top1Precision = new byte[TEST_ITERATIONS];
-            byte[] top3Precision = new byte[TEST_ITERATIONS];
-            byte[] top5Precision = new byte[TEST_ITERATIONS];
-            byte[] top7Precision = new byte[TEST_ITERATIONS];
+            byte[] top1Precision = new byte[ITERATIONS];
+            byte[] top3Precision = new byte[ITERATIONS];
+            byte[] top5Precision = new byte[ITERATIONS];
+            byte[] top7Precision = new byte[ITERATIONS];
 
             // TEST GAMES HERE
-            for(int i = 0; i < TEST_ITERATIONS; i++) {
+            for(int i = 0; i < ITERATIONS; i++) {
                 //0. take one of the games, remove one word and store it
                 int id = (int) (Math.random() * (validationIDs.size()-1)); // select one random id
                 String gameDescription = db.getDescription(id);
@@ -128,8 +128,8 @@ public class ValidationController {
             int top3Sum = 0;
             int top5Sum = 0;
             int top7Sum = 0;
-            for(int i = 0; i < TEST_ITERATIONS; i++) {
-                nanosSum += (delays[i] / (double) TEST_ITERATIONS);
+            for(int i = 0; i < ITERATIONS; i++) {
+                nanosSum += (delays[i] / (double) ITERATIONS);
                 top1Sum += top1Precision[i];
                 top3Sum += top3Precision[i];
                 top5Sum += top5Precision[i];
@@ -137,14 +137,14 @@ public class ValidationController {
             }
             //times
             double nanosAverage = nanosSum;
-            double milisAverage = nanosAverage / 1000000;
-            double sAverage = milisAverage / 1000;
-            double minAverage = sAverage / 60;
-            double hAverage = minAverage / 60;
-            double top1Average = top1Sum / (double) TEST_ITERATIONS;
-            double top3Average = top3Sum / (double) TEST_ITERATIONS;
-            double top5Average = top5Sum / (double) TEST_ITERATIONS;
-            double top7Average = top7Sum / (double) TEST_ITERATIONS;
+            double milisAverage = nanosAverage / 1000000.0;
+            double sAverage = milisAverage / 1000.0;
+            double minAverage = sAverage / 60.0;
+            double hAverage = minAverage / 60.0;
+            double top1Average = top1Sum / (double) ITERATIONS;
+            double top3Average = top3Sum / (double) ITERATIONS;
+            double top5Average = top5Sum / (double) ITERATIONS;
+            double top7Average = top7Sum / (double) ITERATIONS;
 
             report.addRecord(Arrays.asList((double)r,nanosAverage,milisAverage,sAverage,minAverage,hAverage,
                     top1Average,top3Average,top5Average,top7Average));

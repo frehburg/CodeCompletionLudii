@@ -1,23 +1,9 @@
-import codecompletion.Ludeme;
-import codecompletion.controller.Controller;
 import codecompletion.domain.filehandling.DocHandler;
-import codecompletion.domain.filehandling.LudiiGameDatabase;
 import codecompletion.domain.filehandling.ModelLibrary;
-import codecompletion.domain.model.Instance;
 import codecompletion.domain.model.NGram;
-import codecompletion.domain.model.Preprocessing;
 import display.ProgressBar;
-import utils.BucketSort;
-import utils.GZIPController;
-import utils.Instance2Ludeme;
-import utils.Pair;
 import validation.controller.ValidationController;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class Test {
     private static final String COMMA = ",";
@@ -26,7 +12,7 @@ public class Test {
 
     public static void main(String[] args) {
         ValidationController controller = new ValidationController();
-        controller.validate(2);
+        controller.validate(2,15);
     }
 
     public static void getMultipleModels(int maxN) {
